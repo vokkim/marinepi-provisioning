@@ -1,3 +1,4 @@
 ---
 user: pi
 hostname: sophia
+timezone: Europe/Helsinki

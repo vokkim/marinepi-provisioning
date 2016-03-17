@@ -24,8 +24,8 @@
   sudo: yes
   
 - name: Copy timezone file
-  copy: src=timezone dest=/etc/timezone
   sudo: yes
+  template: src=timezone.j2 dest=/etc/timezone mode=0644
 
 - name: Set timezone
   command: dpkg-reconfigure -f noninteractive tzdata
