@@ -13,9 +13,9 @@
 # limitations under the License.
 
 ---
-#Assuming fresh Raspbian Jessie Lite (2015-11-21)
+#Assuming fresh Raspbian Jessie Lite
 
-- name: Set new hostname
+- name: Set hostname
   hostname: name={{ hostname }}
 
 - name: New hostname also to /etc/hosts file
