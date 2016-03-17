@@ -17,31 +17,24 @@
 
 - name: Set new hostname
   hostname: name={{ hostname }}
-  sudo: yes
 
 - name: New hostname also to /etc/hosts file
   lineinfile: dest=/etc/hosts regexp='^127\.0\.1\.1' line='127.0.1.1 {{ hostname }}'
-  sudo: yes
-  
+
 - name: Copy timezone file
-  sudo: yes
   template: src=timezone.j2 dest=/etc/timezone mode=0644
 
 - name: Set timezone
   command: dpkg-reconfigure -f noninteractive tzdata
-  sudo: yes
 
 - name: Update the apt cache
   apt: update_cache=yes
-  sudo: yes
 
 - name: Update the Raspbian distribution
   apt: upgrade=yes
-  sudo: yes
 
 - name: Install/update some basic tools
   apt: pkg={{ item }} state=latest
-  sudo: yes
   with_items:
     - unattended-upgrades
     - build-essential
@@ -64,11 +57,9 @@
   
 - name: Autoremove any unused packages
   shell: "apt-get autoremove --assume-yes --purge"
-  sudo: yes
 
 - name: Autoclean the system
   shell: "apt-get autoclean --assume-yes"
-  sudo: yes
 
 - name: Cleanup the user home directory
   shell: "rm -rf /home/{{ ansible_ssh_user }}/*"
@@ -76,6 +67,7 @@
 - name: Enforce HTTPS for all the GIT traffic
   command: 'git config --global url."https://github.com/".insteadOf git@github.com:'
   command: 'git config --global url."https://".insteadOf git://'
+  sudo: no
 
 - name: Some shell aliases for the user
   lineinfile: dest=/home/{{ ansible_ssh_user }}/.bashrc line="{{ item }}"
