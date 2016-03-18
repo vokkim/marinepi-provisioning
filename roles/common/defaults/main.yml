@@ -2,3 +2,4 @@
 user: pi
 hostname: raspberrypi
 timezone: Europe/Helsinki
+apt_upgrade: true

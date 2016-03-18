@@ -34,6 +34,7 @@
 
 - name: Update the Raspbian distribution
   apt: upgrade=yes
+  when: apt_upgrade == true
 
 - name: Install/update some basic tools
   apt: pkg={{ item }} state=latest
