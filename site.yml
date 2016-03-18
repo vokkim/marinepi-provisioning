@@ -19,6 +19,7 @@
 - hosts: all
   remote_user: pi
   gather_facts: no
+  sudo: yes
 
   roles:
     - common

@@ -22,85 +22,67 @@
 # Max USB power output
 - name: Switch USB to max power output
   lineinfile: dest=/boot/config.txt line='max_usb_current=1'
-  sudo: yes
 
 ##############################################################################
 # Install and configure hostapd
 
 - name: Install hostapd
   apt: pkg=hostapd state=latest
-  sudo: yes
   
 - name: Copy hostapd.conf over
   copy: src=hostapd.conf dest=/etc/hostapd/hostapd.conf
-  sudo: yes
 
 - name: Point hostapd at the config file
   lineinfile: dest=/etc/default/hostapd regexp=^'DAEMON_CONF=""' line='DAEMON_CONF="/etc/hostapd/hostapd.conf"'
-  sudo: yes
   
 ##############################################################################
 # DNS and DHCP services
 
 - name: Install dnsmasq
   apt: pkg=dnsmasq state=latest
-  sudo: yes
 
 - name: copy dnsmasq.conf over
   copy: src=dnsmasq.conf dest=/etc/dnsmasq.conf
-  sudo: yes
 
 ##############################################################################
 # Interfaces
 
 - name: Update network interface configurations
   copy: src=interfaces dest=/etc/network/interfaces
-  sudo: yes
 
 - name: Update wpa supplicant config
   copy: src=wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf 
-  sudo: yes
 
 - name: Wiggle wlans
   shell: ifdown wlan0; ifup wlan0
   shell: ifdown wlan1; ifup wlan1
-  sudo: yes
 
 ##############################################################################
 # Routing and NATting
 
 - name: Enable IPv4 forwarding part 1
   lineinfile: dest=/etc/sysctl.conf line='net.ipv4.ip_forward=1'  
-  sudo: yes
 
 - name: Enable IPv4 forwarding part 2
   shell: sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
-  sudo: yes
 
 - name: Flush IPTables and NAT routing table
   shell: iptables -F
-  sudo: yes
 
 - name: Copy IPTables config file over
   copy: src=iptables.conf dest=/tmp/iptables.conf
-  sudo: yes
 
 - name: Import IPTables config
   shell: iptables-restore < /tmp/iptables.conf
-  sudo: yes
 
 - name: Save IPTables configuration
   shell: sh -c "iptables-save > /etc/iptables.ipv4.nat"
-  sudo: yes
 
 ##############################################################################
 # Services
 
 - name: restart hostapd
   service: name=hostapd state=restarted enabled=yes
-  sudo: yes
   
 - name: restart dnsmasq
   service: name=dnsmasq state=restarted enabled=yes
-  sudo: yes
-  
