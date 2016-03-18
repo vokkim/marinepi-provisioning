@@ -66,9 +66,6 @@
 - name: Autoclean the system
   shell: "apt-get autoclean --assume-yes"
 
-- name: Cleanup the user home directory
-  shell: "rm -rf /home/{{ ansible_ssh_user }}/*"
-
 - name: Enforce HTTPS for all the GIT traffic
   command: 'git config --global url."https://github.com/".insteadOf git@github.com:'
   command: 'git config --global url."https://".insteadOf git://'
