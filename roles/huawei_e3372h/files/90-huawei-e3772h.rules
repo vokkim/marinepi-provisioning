@@ -1,0 +1,9 @@
+#
+# Run usb_modeswitch with custom configuration file to switch Huawei e3372h
+#
+ACTION!="add", GOTO="modeswitch_rules_end"
+SUBSYSTEM!="usb", GOTO="modeswitch_rules_end"
+
+ATTRS{idVendor}=="12d1", ATTR{bInterfaceNumber}=="00", ATTR{bInterfaceClass}=="08", RUN+="/bin/sh -c 'usb_modeswitch -c /etc/usb_modeswitch.d/12d1:1f01 >> /var/log/usb_modeswitch-huawei.log'"
+
+LABEL="modeswitch_rules_end"

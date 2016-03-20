@@ -1,0 +1,11 @@
+#
+# Copied from usb-modeswitch-data package, but added DefaultVendor and DefaultProduct
+#
+
+# Huawei E353 (3.se) and others
+DefaultVendor=0x12d1
+DefaultProduct=0x1f01
+TargetVendor=0x12d1
+TargetProductList="14db,14dc"
+HuaweiNewMode=1
+NoDriverLoading=1
