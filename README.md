@@ -11,6 +11,13 @@ Current system is:
 	- Nexus NX sailing instruments
 	- [dAISy](https://github.com/astuder/dAISy) AIS receiver
 
+Usage
+=====
+
+1. Initialize a memory card with the latest [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/)
+1. Connect the to-be-provisioned Raspberry Pi to the local network
+1. Run `./firstrun.sh <ip-to-your-raspi>` to push your SSH key & do the initial setup
+
 Todo
 ====
 - [ ] make generic, remove config that is specific to one particular project

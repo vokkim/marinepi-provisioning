@@ -15,13 +15,17 @@
 ---
 - name: Download canboat
   git: repo=https://github.com/canboat/canboat.git dest={{ canboat_path }} clone=yes
+  sudo: no
+  register: canboat_sources
 
 - command: make
   args:
     chdir: "{{ canboat_path }}"
+  sudo: no
+  when: canboat_sources.changed
 
-- command: sudo make install
+- command: make install
   args:
     chdir: "{{ canboat_path }}"
   ignore_errors: yes  # can't help the way Makefile is written...
- 
+  when: canboat_sources.changed

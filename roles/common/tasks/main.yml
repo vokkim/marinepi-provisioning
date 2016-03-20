@@ -13,35 +13,32 @@
 # limitations under the License.
 
 ---
-#Assuming fresh Raspbian Jessie Lite (2015-11-21)
+#Assuming fresh Raspbian Jessie Lite
 
-- name: Set new hostname
+- name: Set hostname
   hostname: name={{ hostname }}
-  sudo: yes
 
 - name: New hostname also to /etc/hosts file
   lineinfile: dest=/etc/hosts regexp='^127\.0\.1\.1' line='127.0.1.1 {{ hostname }}'
-  sudo: yes
-  
+
 - name: Copy timezone file
-  copy: src=timezone dest=/etc/timezone
-  sudo: yes
+  template: src=timezone.j2 dest=/etc/timezone mode=0644
+  register: timezone_result
 
 - name: Set timezone
   command: dpkg-reconfigure -f noninteractive tzdata
-  sudo: yes
+  when: timezone_result.changed
 
 - name: Update the apt cache
-  apt: update_cache=yes
-  sudo: yes
+  apt: update_cache=yes cache_valid_time=7200
 
 - name: Update the Raspbian distribution
   apt: upgrade=yes
-  sudo: yes
+  when: apt_upgrade == true
+  notify: reboot
 
 - name: Install/update some basic tools
   apt: pkg={{ item }} state=latest
-  sudo: yes
   with_items:
     - unattended-upgrades
     - build-essential
@@ -61,21 +58,20 @@
     - screen
     - dnsutils
     - wavemon
-  
+  notify: reboot
+
 - name: Autoremove any unused packages
   shell: "apt-get autoremove --assume-yes --purge"
-  sudo: yes
+  register: autoremove_output
+  changed_when: "'The following packages will be REMOVED' in autoremove_output.stdout"
 
 - name: Autoclean the system
   shell: "apt-get autoclean --assume-yes"
-  sudo: yes
-
-- name: Cleanup the user home directory
-  shell: "rm -rf /home/{{ ansible_ssh_user }}/*"
 
 - name: Enforce HTTPS for all the GIT traffic
   command: 'git config --global url."https://github.com/".insteadOf git@github.com:'
   command: 'git config --global url."https://".insteadOf git://'
+  sudo: no
 
 - name: Some shell aliases for the user
   lineinfile: dest=/home/{{ ansible_ssh_user }}/.bashrc line="{{ item }}"
