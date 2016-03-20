@@ -1,0 +1,11 @@
+---
+- name: Install necessary packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - wireless-regdb
+    - iw
+    - crda
+
+- name: Set regulatory domain
+  lineinfile: dest=/etc/default/crda regexp="REGDOMAIN=.*" line="REGDOMAIN={{ crda_domain_code }}"
+  notify: reboot
