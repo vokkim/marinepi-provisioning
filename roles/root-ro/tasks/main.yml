@@ -3,7 +3,7 @@
   apt: pkg=busybox state=latest
 
 - name: Install initramfs boot script
-  copy: src=overlayfs-root dest=/etc/initramfs-tools/scripts/init-bottom/overlayfs-root mode=755
+  template: src=overlayfs-root.j2 dest=/etc/initramfs-tools/scripts/init-bottom/overlayfs-root mode=755
   notify: update_initramfs
 
 - name: Include OverlayFS kernel module to initramfs image

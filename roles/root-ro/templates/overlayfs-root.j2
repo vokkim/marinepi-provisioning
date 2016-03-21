@@ -60,7 +60,7 @@ mkdir -p /mnt/ramdisk
 mkdir -p /mnt/root-ro
 
 # Then create the actual ramdisk and mount it to /mnt/ramdisk
-mount -t tmpfs -o size=256m tmpfs /mnt/ramdisk
+mount -t tmpfs -o size={{ root_ro_ramdisk_size }} tmpfs /mnt/ramdisk
 
 # Create mountpoints for the read-write layer of the overlayfs & its workdir
 mkdir -p /mnt/ramdisk/root-rw
