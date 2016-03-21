@@ -1,6 +1,10 @@
 - name: restart-udev
   service: name=udev state=restarted
 
+- name: update_initramfs
+  shell: if [ -f "/boot/initrd.img-$(uname -r)" ]; then update-initramfs -u -k $(uname -r); else update-initramfs -c -k $(uname -r); fi
+  notify: reboot
+
 # Keep these at the end to run the reboot handler after all other handlers
 - name: reboot
   shell: shutdown -r now &

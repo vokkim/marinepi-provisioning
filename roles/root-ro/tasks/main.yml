@@ -1,0 +1,29 @@
+---
+- name: Install busybox
+  apt: pkg=busybox state=latest
+
+- name: Install initramfs boot script
+  copy: src=overlayfs-root dest=/etc/initramfs-tools/scripts/init-bottom/overlayfs-root mode=755
+  notify: update_initramfs
+
+- name: Include OverlayFS kernel module to initramfs image
+  lineinfile: dest=/etc/initramfs-tools/modules line=overlay
+  notify: update_initramfs
+
+- name: Get kernel version
+  shell: uname -r
+  register: kernel_version
+
+- name: Enable initramfs in config.txt
+  lineinfile: dest=/boot/config.txt regexp="^initramfs initrd.img.*" line="initramfs initrd.img-{{ kernel_version.stdout }}"
+  notify: reboot
+
+- name: Remove disable-root-ro parameter from kernel command line
+  lineinfile: dest=/boot/cmdline.txt regexp='^(.*)( disable-root-ro=[^ ]*)(.*)$' line='\1\3' backrefs=yes
+  when: root_ro_enabled
+  notify: reboot
+
+- name: Add disable-root-ro parameter to kernel command line
+  lineinfile: dest=/boot/cmdline.txt regexp='^(((?! disable-root-ro=).)*)$' line='\1 disable-root-ro=true' backrefs=yes
+  when: not root_ro_enabled
+  notify: reboot
