@@ -79,3 +79,6 @@
   - "alias ll='ls -l'"
   - "alias la='ls -la'"
   - "alias lt='ls -lat'"
+
+# Reboot due to possible changes now
+- meta: flush_handlers

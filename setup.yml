@@ -17,6 +17,9 @@
   sudo: yes
   user: "{{ ansible_ssh_user }}"
 
+  handlers:
+    - include: handlers/handlers.yml
+
   vars:
     ssh_public_key: ~/.ssh/id_rsa.pub
 
@@ -26,10 +29,6 @@
       private: yes
 
   tasks:
-    - name: Expand filesystem
-      shell: "raspi-config --expand-rootfs"
-      sudo: yes
-
     - name: Create .ssh
       file: state=directory dest=/home/{{ ansible_ssh_user }}/.ssh/
 
@@ -40,13 +39,7 @@
       shell: echo {{ ansible_ssh_user }}:{{ new_password }} | sudo chpasswd
       no_log: yes
 
-    - name: Reboot
-      shell: sleep 2 && shutdown -r now
-      async: 1
-      poll: 0
-      sudo: true
-      ignore_errors: true
-  
-    - name: Wait for reboot
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=20
-      sudo: false
+    - name: Expand filesystem
+      shell: "raspi-config --expand-rootfs"
+      sudo: yes
+      notify: reboot
