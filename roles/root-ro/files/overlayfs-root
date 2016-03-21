@@ -1,5 +1,20 @@
 #!/bin/sh
 
+########################################################################################################
+#
+# This is a boot script for initramfs-tools package
+#
+# The script should be run in the init-bottom stage of the initramfs and thus it assumes that the
+# root filesystem has already been mounted to ${rootmnt}.
+#
+# The script takes the already mounted root partition from ${rootmnt}, creates a tmpfs ramdisk and
+# combines these two as overlayfs partition that is mounted to ${rootmnt}.
+#
+########################################################################################################
+
+
+
+# Pre-requirements section, needed by initramfs-tools. We have no pre-requirements.
 PREREQ=""
 
 prereqs()
@@ -14,10 +29,15 @@ case "$1" in
     ;;
 esac
 
+
+
+# Include initramfs-tools helper functions
 . /scripts/functions
 
 
 
+# Check if 'disable-root-ro' kernel parameter has been set.
+# If it has, exit gracefully leaving the root partition mounted normally.
 DISABLE_ROOT_RO=
 for CMD_PARAM in $(cat /proc/cmdline); do
     case ${CMD_PARAM} in
@@ -34,19 +54,31 @@ fi
 
 
 
+# Do the actual mounting magic
+# First create directories for the ramdisk and read-only version of the root fs
 mkdir -p /mnt/ramdisk
 mkdir -p /mnt/root-ro
+
+# Then create the actual ramdisk and mount it to /mnt/ramdisk
 mount -t tmpfs -o size=256m tmpfs /mnt/ramdisk
+
+# Create mountpoints for the read-write layer of the overlayfs & its workdir
 mkdir -p /mnt/ramdisk/root-rw
 mkdir -p /mnt/ramdisk/overlay-work
 
+# Move already mounted root partition to /mnt/root-ro
 mount --move ${rootmnt} /mnt/root-ro
+
+# Create a new overlayfs mount using moved root as the lower layer and the created ramdisk as the upper one.
+# Mount it in the place of the normally mounted root
 mount -t overlay overlay -o lowerdir=/mnt/root-ro,upperdir=/mnt/ramdisk/root-rw,workdir=/mnt/ramdisk/overlay-work ${rootmnt}
 
+# Create directories for the read-only layer & ramdisk also on the new root (the overlayfs one)
 mkdir -p ${rootmnt}/mnt/root-ro
 mkdir -p ${rootmnt}/mnt/ramdisk
 
-# Move mounts
+# Move read-only root & ramdisk mounts under overlayfs root. After the system has booted all read-only files can be found
+# in /mnt/root-ro and all files that are written will be in /mnt/ramdisk
 mount --move /mnt/root-ro ${rootmnt}/mnt/root-ro
 mount --move /mnt/ramdisk ${rootmnt}/mnt/ramdisk
 
