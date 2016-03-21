@@ -18,4 +18,9 @@ if [ "$2" != "" ]; then
   fi
 fi
 
+if grep -q $HOST ~/.ssh/known_hosts; then
+  echo -e "\nRemoving $HOST from ~/.ssh/known_hosts..\n\n"
+  ssh-keygen -R $HOST
+fi
+
 ansible-playbook -k -i $HOST, setup.yml -e "ssh_public_key=$PUBLIC_KEY" -e ansible_ssh_user=pi
