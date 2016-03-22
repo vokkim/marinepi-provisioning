@@ -15,10 +15,10 @@
 ---
 # Run setup first, then this:
 # ansible-playbook -i hosts site.yml
-   
+
 - hosts: all
   remote_user: pi
-  gather_facts: no
+  gather_facts: yes
   sudo: yes
 
   roles:
