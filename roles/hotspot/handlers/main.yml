@@ -1,0 +1,10 @@
+---
+- name: restart_hostapd
+  service: name=hostapd state=restarted enabled=yes
+  
+- name: restart_dnsmasq
+  service: name=dnsmasq state=restarted enabled=yes
+
+- name: reload_sysctl
+  shell: "sysctl -p"
+  

@@ -22,18 +22,21 @@
 # Max USB power output
 - name: Switch USB to max power output
   lineinfile: dest=/boot/config.txt line='max_usb_current=1'
+  notify: reboot
 
 ##############################################################################
 # Install and configure hostapd
 
 - name: Install hostapd
   apt: pkg=hostapd state=latest
-  
+
 - name: Copy hostapd.conf over
-  copy: src=hostapd.conf dest=/etc/hostapd/hostapd.conf
+  template: src=hostapd_conf.j2 dest=/etc/hostapd/hostapd.conf mode=0644
+  notify: restart_hostapd
 
 - name: Point hostapd at the config file
   lineinfile: dest=/etc/default/hostapd regexp=^'DAEMON_CONF=""' line='DAEMON_CONF="/etc/hostapd/hostapd.conf"'
+  notify: restart_hostapd
   
 ##############################################################################
 # DNS and DHCP services
@@ -42,32 +45,25 @@
   apt: pkg=dnsmasq state=latest
 
 - name: copy dnsmasq.conf over
-  copy: src=dnsmasq.conf dest=/etc/dnsmasq.conf
+  template: src=dnsmasq_conf.j2 dest=/etc/dnsmasq.conf
+  notify: restart_dnsmasq
 
 ##############################################################################
 # Interfaces
 
 - name: Update network interface configurations
-  copy: src=interfaces dest=/etc/network/interfaces
-
-- name: Update wpa supplicant config
-  copy: src=wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf 
-
-- name: Wiggle wlans
-  shell: ifdown wlan0; ifup wlan0
-  shell: ifdown wlan1; ifup wlan1
+  template: src=interfaces.j2 dest=/etc/network/interfaces
+  notify: reboot
 
 ##############################################################################
 # Routing and NATting
 
-- name: Enable IPv4 forwarding part 1
+- name: Enable IPv4 forwarding
   lineinfile: dest=/etc/sysctl.conf line='net.ipv4.ip_forward=1'  
-
-- name: Enable IPv4 forwarding part 2
-  shell: sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+  notify: reload_sysctl
 
 - name: Flush IPTables and NAT routing table
-  shell: iptables -F
+  shell: iptables -t nat -F
 
 - name: Copy IPTables config file over
   copy: src=iptables.conf dest=/tmp/iptables.conf
@@ -78,11 +74,5 @@
 - name: Save IPTables configuration
   shell: sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
-##############################################################################
-# Services
-
-- name: restart hostapd
-  service: name=hostapd state=restarted enabled=yes
-  
-- name: restart dnsmasq
-  service: name=dnsmasq state=restarted enabled=yes
+# Reboot due to possible changes now
+- meta: flush_handlers

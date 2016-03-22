@@ -1,7 +1,7 @@
 # Name and channel
 
-ssid=Sophia
-channel=11
+ssid={{ hotspot_ssid }}
+channel={{ hotspot_channel }}
 
 # Authentication
 
@@ -9,12 +9,12 @@ macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-wpa_passphrase=kaikkipaitsipurjehdusonturhaa
+wpa_passphrase={{ hotspot_passphrase }}
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=CCMP
 rsn_pairwise=CCMP
 
-# Hardware configuration
+# Hardware configuration (RT5370)
 
 interface=wlan0
 driver=nl80211
