@@ -1,21 +1,13 @@
-SailPi
-======
+MarinePi
+========
 
-Ansible scripts to setup a fresh Raspberry Pi for the boat _Sophia_.
-Current system is:
-- RasPi2B+ running Raspbian Jessie Lite 2015-11-21 
-- Semi-custom [UPS-like functionality](http://lowpowerlab.com/mightyboost/)
-- Ralink 5370 (RT5370 chipset) wifi adapters (2x)
-- Specific RS232-USB converters for NMEA0183 instruments 
-	- GPS
-	- Nexus NX sailing instruments
-	- [dAISy](https://github.com/astuder/dAISy) AIS receiver
+Ansible scripts to setup a Raspberry Pi for boat use, providing access to various data sources on board both via wired and wireless connections. SignalK-node server, hotspot, Internet connectivity etc
 
 Usage
 =====
 
 1. Initialize a memory card with the latest [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/)
-1. Connect the to-be-provisioned Raspberry Pi to the local network
+1. Connect the to-be-provisioned Raspberry Pi to the local network and find out it's IP address
 1. Run `./firstrun.sh <ip-to-your-raspi>` to push your SSH key & do the initial setup
 
 Todo
