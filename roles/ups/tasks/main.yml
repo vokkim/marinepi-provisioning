@@ -20,3 +20,4 @@
 
 - name: make shutdown script start at boot time
   lineinfile: dest=/etc/rc.local insertbefore="exit 0" line="/etc/shutdowncheck.sh &"
+  notify: reboot
