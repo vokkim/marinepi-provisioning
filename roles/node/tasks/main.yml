@@ -13,14 +13,25 @@
 # limitations under the License.
 
 ---
-- name: Download node
-  get_url: 
-    url="{{ node_url }}"
-    dest="/tmp/{{ node_name }}.deb"
-  sudo: no
-  
-- name: Install node
-  apt: deb="/tmp/{{ node_name }}.deb"
-  
-- name: Install wscat
-  npm: name=wscat global=yes
+
+- name: Installing dependencies
+  apt:
+    pkg: apt-transport-https
+    state: present
+
+- name: Adding APT key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+- name: Add APT repository
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ distro }} main"
+    update_cache: yes
+
+- name: Installing packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - nodejs
+    - build-essential
