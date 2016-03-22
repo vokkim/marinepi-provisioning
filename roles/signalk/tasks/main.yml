@@ -45,7 +45,7 @@
   sudo: no
 
 - name: install maptracker
-  command: node_modules/.bin/bower install https://github.com/hkapanen/maptracker.git
+  command: node_modules/.bin/bower install https://github.com/SignalK/maptracker.git
   args:
     chdir: "{{ signalk_path }}"
   sudo: no
