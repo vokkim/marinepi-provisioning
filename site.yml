@@ -24,6 +24,7 @@
   roles:
     - common
     - ups
+    - crda_domain
     - hotspot
     - usb-serial
     - kplex
