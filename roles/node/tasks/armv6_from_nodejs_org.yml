@@ -32,6 +32,10 @@
   shell: tar xzf /tmp/nodejs.tar.gz -C /usr/local --strip-components=1 --no-same-owner
   when: node_package.changed
 
+- name: Link binary to /usr/bin/node
+  file: src=/usr/local/bin/node dest=/usr/bin/node state=link force=yes
+  when: node_package.changed
+
 - name: Clear temporary files
   file: path=/tmp/nodejs.tar.gz state=absent
   when: node_package.changed
