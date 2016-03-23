@@ -1,0 +1,40 @@
+#######################################################################################
+# Installs Node application from git repository and configures it to run under systemd
+#
+# NOTE: This role assumes that variables 'node_app_name', 'node_app_git_repo' and
+# 'node_app_main' have been set! This can be done in the playbook for example like this:
+#
+#  - role: node-app
+#    node_app_name: "my-application"
+#    node_app_git_repo: "<url-to-application-git-repo>"
+#    node_app_main: "main.js"
+#
+# Multiple applications can be installed by including the role many times
+# using different parameters.
+#
+
+---
+- name: Make app dir
+  file: path={{ node_app_path }} state=directory mode=0755 owner={{ node_app_user }} group={{ node_app_group }}
+
+- name: Pull sources from the repository
+  git: repo={{ node_app_git_repo }} dest={{ node_app_path }} force=yes version=master
+  sudo_user: "{{ node_app_user }}"
+  register: git_pull
+
+- name: Install npm packages
+  shell: chdir={{ node_app_path }} npm install
+  sudo_user: "{{ node_app_user }}"
+  when: git_pull.changed
+
+- name: Install systemd unit file
+  template: src=node_app_systemd_script.j2 dest=/etc/systemd/system/{{ node_app_name }}.service owner=root group=root mode=0644
+  register: unit_file
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  when: unit_file.changed
+
+- name: Restart application
+  service: name={{ node_app_name }} state=restarted enabled=yes
+  when: git_pull.changed or unit_file.changed
