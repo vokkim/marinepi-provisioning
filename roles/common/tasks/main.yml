@@ -52,7 +52,7 @@
     - dstat
     - rpi-update
     - haveged
-    - avahi-daemon 
+    - avahi-daemon
     - rng-tools
     - netatalk
     - screen
@@ -69,13 +69,15 @@
   shell: "apt-get autoclean --assume-yes"
 
 - name: Enforce HTTPS for all the GIT traffic
-  command: 'git config --global url."https://github.com/".insteadOf git@github.com:'
-  command: 'git config --global url."https://".insteadOf git://'
+  command: "{{item}}"
+  with_items:
+    - 'git config --global url."https://github.com/".insteadOf git@github.com:'
+    - 'git config --global url."https://".insteadOf git://'
   sudo: no
 
 - name: Some shell aliases for the user
   lineinfile: dest=/home/{{ ansible_ssh_user }}/.bashrc line="{{ item }}"
-  with_items: 
+  with_items:
   - "alias ll='ls -l'"
   - "alias la='ls -la'"
   - "alias lt='ls -lat'"
