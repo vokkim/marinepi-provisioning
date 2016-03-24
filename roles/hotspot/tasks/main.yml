@@ -76,8 +76,8 @@
     - 'iptables -F'
     - 'iptables -t nat -F'
 
-- name: Copy IPTables config file over
-  copy: src=iptables.conf dest=/tmp/iptables.conf
+- name: iptables config file
+  template: src=iptables_conf.j2 dest=/tmp/iptables.conf
 
 - name: Import IPTables config
   shell: iptables-restore < /tmp/iptables.conf
