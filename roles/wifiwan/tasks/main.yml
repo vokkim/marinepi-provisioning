@@ -1,0 +1,36 @@
+---
+##############################################################################
+# Max USB power output
+- name: Switch USB to max power output
+  lineinfile: dest=/boot/config.txt line='max_usb_current=1'
+  notify: reboot
+
+##############################################################################
+# Interfaces
+
+- name: Remove wifiwan interface references from the main interface file 
+  replace:
+    dest=/etc/network/interfaces
+    regexp='^.*{{ wifiwan_interface }}(.|\n)*?(\n|\Z)$'
+    replace=''
+  notify: restart-networking
+
+- name: Ensure interface.d source-dir reference
+  lineinfile: 
+    dest=/etc/network/interfaces 
+    line='source /etc/network/interfaces.d/*.cfg'  
+  notify: restart-networking
+  
+- name: Add separate file for hotspot to interface.d
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wifiwan_interface }}_wifiwan.cfg
+  notify: restart-networking
+    
+##############################################################################
+# wpa supplicant
+
+- name: Configure wpa_supplicant 
+  template: src=wpa_supplicant_conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf 
+  notify: restart-networking
+
+# Reboot due to possible changes now
+- meta: flush_handlers
