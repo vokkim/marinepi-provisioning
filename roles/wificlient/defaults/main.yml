@@ -1,7 +1,7 @@
 ---
-wifiwan_interface: wlan1
+wificlient_interface: wlan1
 
-wifiwan_networks:
+wificlient_networks:
   network1: supersecret
   network2: megasecret
   etc: etc_etc_etc

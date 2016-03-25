@@ -8,10 +8,10 @@
 ##############################################################################
 # Interfaces
 
-- name: Remove wifiwan interface references from the main interface file 
+- name: Remove wificlient interface references from the main interface file 
   replace:
     dest=/etc/network/interfaces
-    regexp='^.*{{ wifiwan_interface }}(.|\n)*?(\n|\Z)$'
+    regexp='^.*{{ wificlient_interface }}(.|\n)*?(\n|\Z)$'
     replace=''
   notify: restart-networking
 
@@ -22,7 +22,7 @@
   notify: restart-networking
   
 - name: Add separate file for hotspot to interface.d
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wifiwan_interface }}_wifiwan.cfg
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wificlient_interface }}_wificlient.cfg
   notify: restart-networking
     
 ##############################################################################

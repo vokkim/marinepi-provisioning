@@ -1,7 +1,7 @@
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 
-{% for ssid, psk in wifiwan_networks.iteritems() %}
+{% for ssid, psk in wificlient_networks.iteritems() %}
 network={
     ssid="{{ ssid }}"
     psk="{{ psk }}"

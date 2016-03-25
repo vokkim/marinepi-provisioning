@@ -19,23 +19,24 @@
   sudo: yes
 
 # Configure vars and roles below to match your setup and environment
+# You can define 1...n wificlients by adding/removing lines
 
   vars:
     - hostname: marinepi
-    - wifiwan_networks:
-        homewifi: h0m3sw337h0m3
-        workwifi: 4llw0rkn0pl4y
-        portwifi: drunk3ns41l0r
+    - wificlient_networks:
+        <your ssid 1 here>: <your passphrase 1 here>
+        <your ssid 2 here>: <your passphrase 2 here>
+        <your ssid n here>: <your passphrase n here>
     - hotspot_inet_interface: wlan1
     - hotspot_interface: wlan0
-    - hotspot_ssid: MarinePi
-    - hotspot_passphrase: navigarenecesseest
+    - hotspot_ssid: <your hotspot ssid here>
+    - hotspot_passphrase: <your hotspot passphrase here>
   
   roles:
     - common
     - ups
     - crda_domain
-    - wifiwan
+    - wificlient
     - hotspot
     - usb-serial
     - kplex
