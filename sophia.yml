@@ -1,0 +1,50 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+- hosts: all
+  remote_user: pi
+  gather_facts: yes
+  sudo: yes
+
+# Public variables
+  vars:
+    - hostname: sophia
+    - hotspot_inet_interface: wlan1
+    - hotspot_interface: wlan0
+
+# Secret variables are stored in an ansible vault 
+# protected with a password in a file referenced via env variable
+# export ANSIBLE_VAULT_PASSWORD_FILE=~/.ansible_vault_pass.txt 
+#
+# Secret variables can be accessed locally via 
+# ansible-vault [encrypt|decrypt|view] secrets/sophia.yml
+
+  vars_files:
+    - secrets/sophia.yml
+  
+  roles:
+    - common
+    - ups
+    - crda_domain
+    - wificlient
+    - hotspot
+    - usb-serial
+    - kplex
+    - canboat
+    - node
+    - signalk
+
+  handlers:
+    - include: handlers/handlers.yml
