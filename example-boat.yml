@@ -13,18 +13,30 @@
 # limitations under the License.
 
 ---
-# Run setup first, then this:
-# ansible-playbook -i hosts site.yml
-
 - hosts: all
   remote_user: pi
   gather_facts: yes
   sudo: yes
 
+# Configure vars and roles below to match your setup and environment
+# You can define 1...n wificlients by adding/removing lines
+
+  vars:
+    - hostname: marinepi
+    - wificlient_networks:
+        <your ssid 1 here>: <your passphrase 1 here>
+        <your ssid 2 here>: <your passphrase 2 here>
+        <your ssid n here>: <your passphrase n here>
+    - hotspot_inet_interface: wlan1
+    - hotspot_interface: wlan0
+    - hotspot_ssid: <your hotspot ssid here>
+    - hotspot_passphrase: <your hotspot passphrase here>
+  
   roles:
     - common
     - ups
     - crda_domain
+    - wificlient
     - hotspot
     - usb-serial
     - kplex
@@ -34,8 +46,3 @@
 
   handlers:
     - include: handlers/handlers.yml
-
-  tasks:
-    - name: ALL DONE!
-      pause: prompt="Press [Enter] to reboot."
-      notify: reboot

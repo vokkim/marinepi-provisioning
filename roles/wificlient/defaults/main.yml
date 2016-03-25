@@ -1,0 +1,5 @@
+---
+wificlient_interface: wlan1
+
+wificlient_networks: 
+  defaultssid: defaultpassphrase

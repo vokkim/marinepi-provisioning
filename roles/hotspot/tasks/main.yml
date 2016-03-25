@@ -14,11 +14,6 @@
 
 ---
 ##############################################################################
-# Create a wifi hotspot and wifi uplink
-
-##############################################################################
-
-##############################################################################
 # Max USB power output
 - name: Switch USB to max power output
   lineinfile: dest=/boot/config.txt line='max_usb_current=1'
@@ -29,13 +24,14 @@
 
 - name: Install hostapd
   apt: pkg=hostapd state=latest
+  notify: reboot
 
 - name: Copy hostapd.conf over
   template: src=hostapd_conf.j2 dest=/etc/hostapd/hostapd.conf mode=0644
   notify: restart_hostapd
 
 - name: Point hostapd at the config file
-  lineinfile: dest=/etc/default/hostapd regexp=^'DAEMON_CONF=""' line='DAEMON_CONF="/etc/hostapd/hostapd.conf"'
+  lineinfile: dest=/etc/default/hostapd regexp=^'DAEMON_CONF=' line='DAEMON_CONF="/etc/hostapd/hostapd.conf"'
   notify: restart_hostapd
   
 ##############################################################################
@@ -51,9 +47,22 @@
 ##############################################################################
 # Interfaces
 
-- name: Update network interface configurations
-  template: src=interfaces.j2 dest=/etc/network/interfaces
-  notify: reboot
+- name: Ensure interface.d source-dir reference
+  lineinfile: 
+    dest=/etc/network/interfaces 
+    line='source /etc/network/interfaces.d/*.cfg'  
+  notify: restart-networking
+
+- name: Remove hotspot interface reference from the main interface file 
+  replace:
+    dest=/etc/network/interfaces
+    regexp='^.*{{ hotspot_interface }}(.|\n)*?(\n|\Z)$'
+    replace=''
+  notify: restart-networking
+
+- name: Add separate file for hotspot to interface.d
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ hotspot_interface }}_hotspot.cfg
+  notify: restart-networking
 
 ##############################################################################
 # Routing and NATting
@@ -63,10 +72,13 @@
   notify: reload_sysctl
 
 - name: Flush IPTables and NAT routing table
-  shell: iptables -t nat -F
+  shell: "{{item}}"
+  with_items:
+    - 'iptables -F'
+    - 'iptables -t nat -F'
 
-- name: Copy IPTables config file over
-  copy: src=iptables.conf dest=/tmp/iptables.conf
+- name: iptables config file
+  template: src=iptables_conf.j2 dest=/tmp/iptables.conf
 
 - name: Import IPTables config
   shell: iptables-restore < /tmp/iptables.conf
