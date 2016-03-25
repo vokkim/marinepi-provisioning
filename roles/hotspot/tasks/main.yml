@@ -24,6 +24,7 @@
 
 - name: Install hostapd
   apt: pkg=hostapd state=latest
+  notify: reboot
 
 - name: Copy hostapd.conf over
   template: src=hostapd_conf.j2 dest=/etc/hostapd/hostapd.conf mode=0644
