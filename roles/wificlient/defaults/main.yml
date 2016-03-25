@@ -1,7 +1,5 @@
 ---
 wificlient_interface: wlan1
 
-wificlient_networks:
-  network1: supersecret
-  network2: megasecret
-  etc: etc_etc_etc
+wificlient_networks: 
+  defaultssid: defaultpassphrase
