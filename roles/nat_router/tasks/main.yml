@@ -1,0 +1,74 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+##############################################################################
+#
+#  This role creates a simple "internet sharing" from nat_router_inet_interface to
+#  nat_router_local_interface using NAT and DHCP server. Traffic from the private network
+#  is NATed through the nat_router_inet_interface. DHCP server provides IP addresses on
+#  the nat_router_local_interface.
+#
+
+---
+##############################################################################
+# DNS and DHCP services
+
+- name: Install dnsmasq
+  apt: pkg=dnsmasq state=latest
+
+- name: copy dnsmasq.conf over
+  template: src=dnsmasq_conf.j2 dest=/etc/dnsmasq.conf
+  notify: restart_dnsmasq
+
+- name: Add static IP addresses
+  template: src=static_hosts.conf.j2 dest=/etc/dnsmasq.d/static_hosts.conf
+  notify: restart_dnsmasq
+
+##############################################################################
+# Interfaces
+
+- name: Ensure interface.d source-dir reference
+  lineinfile: 
+    dest=/etc/network/interfaces 
+    line='source-directory /etc/network/interfaces.d'
+  notify: restart-networking
+
+- name: Remove hotspot interface reference from the main interface file 
+  replace:
+    dest=/etc/network/interfaces
+    regexp='^.*{{ nat_router_local_interface }}(.|\n)*?(\n|\Z)$'
+    replace=''
+  notify: restart-networking
+
+- name: Add separate file for hotspot to interface.d
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_local_interface }}_hotspot  # NOTE: filename must match ^[a-zA-Z0-9_-]+$ (no '.' allowed!)
+  notify: restart-networking
+
+##############################################################################
+# Routing and NATting
+
+- name: Enable IPv4 forwarding
+  lineinfile: dest=/etc/sysctl.conf regexp='.*net.ipv4.ip_forward.*' line='net.ipv4.ip_forward=1'
+  notify: reload_sysctl
+
+# Run handlers to get all network interfaces up before applying firewall configuration
+- meta: flush_handlers
+
+- name: iptables config file
+  template: src=iptables_conf.j2 dest=/etc/iptables.ipv4.nat
+  register: iptables_config
+
+- name: Import iptables config
+  shell: iptables-restore < /etc/iptables.ipv4.nat
+  when: iptables_config.changed

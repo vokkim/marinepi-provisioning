@@ -18,11 +18,11 @@
 - name: Ensure interface.d source-dir reference
   lineinfile: 
     dest=/etc/network/interfaces 
-    line='source /etc/network/interfaces.d/*.cfg'  
+    line='source-directory /etc/network/interfaces.d'
   notify: restart-networking
   
 - name: Add separate file for hotspot to interface.d
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wificlient_interface }}_wificlient.cfg
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wificlient_interface }}_wificlient
   notify: restart-networking
     
 ##############################################################################
