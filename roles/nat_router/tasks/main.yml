@@ -1,0 +1,90 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+##############################################################################
+# Max USB power output
+- name: Switch USB to max power output
+  lineinfile: dest=/boot/config.txt line='max_usb_current=1'
+  notify: reboot
+
+##############################################################################
+# Install and configure hostapd
+
+- name: Install hostapd
+  apt: pkg=hostapd state=latest
+  notify: reboot
+
+- name: Copy hostapd.conf over
+  template: src=hostapd_conf.j2 dest=/etc/hostapd/hostapd.conf mode=0644
+  notify: restart_hostapd
+
+- name: Point hostapd at the config file
+  lineinfile: dest=/etc/default/hostapd regexp=^'DAEMON_CONF=' line='DAEMON_CONF="/etc/hostapd/hostapd.conf"'
+  notify: restart_hostapd
+  
+##############################################################################
+# DNS and DHCP services
+
+- name: Install dnsmasq
+  apt: pkg=dnsmasq state=latest
+
+- name: copy dnsmasq.conf over
+  template: src=dnsmasq_conf.j2 dest=/etc/dnsmasq.conf
+  notify: restart_dnsmasq
+
+##############################################################################
+# Interfaces
+
+- name: Ensure interface.d source-dir reference
+  lineinfile: 
+    dest=/etc/network/interfaces 
+    line='source /etc/network/interfaces.d/*.cfg'  
+  notify: restart-networking
+
+- name: Remove hotspot interface reference from the main interface file 
+  replace:
+    dest=/etc/network/interfaces
+    regexp='^.*{{ hotspot_interface }}(.|\n)*?(\n|\Z)$'
+    replace=''
+  notify: restart-networking
+
+- name: Add separate file for hotspot to interface.d
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ hotspot_interface }}_hotspot.cfg
+  notify: restart-networking
+
+##############################################################################
+# Routing and NATting
+
+- name: Enable IPv4 forwarding
+  lineinfile: dest=/etc/sysctl.conf line='net.ipv4.ip_forward=1'  
+  notify: reload_sysctl
+
+- name: Flush IPTables and NAT routing table
+  shell: "{{item}}"
+  with_items:
+    - 'iptables -F'
+    - 'iptables -t nat -F'
+
+- name: iptables config file
+  template: src=iptables_conf.j2 dest=/tmp/iptables.conf
+
+- name: Import IPTables config
+  shell: iptables-restore < /tmp/iptables.conf
+
+- name: Save IPTables configuration
+  shell: sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+# Reboot due to possible changes now
+- meta: flush_handlers

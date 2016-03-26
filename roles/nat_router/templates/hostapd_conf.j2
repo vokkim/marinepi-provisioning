@@ -1,0 +1,30 @@
+# Name and channel
+
+ssid={{ hotspot_ssid }}
+channel={{ hotspot_channel }}
+
+# Authentication
+
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase={{ hotspot_passphrase }}
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+rsn_pairwise=CCMP
+
+# Hardware configuration (RT5370)
+
+interface=wlan0
+driver=nl80211
+hw_mode=g
+ieee80211n=1
+wmm_enabled=1
+
+# Logging
+
+logger_syslog=-1
+logger_syslog_level=2
+logger_stdout=-1
+logger_stdout_level=2
