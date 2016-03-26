@@ -22,7 +22,7 @@
   notify: restart-networking
   
 - name: Add separate file for hotspot to interface.d
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wificlient_interface }}_wificlient.cfg
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ wificlient_interface }}_wificlient
   notify: restart-networking
     
 ##############################################################################
