@@ -1,8 +1,8 @@
 # Hotspot
 
-auto {{ nat_router_interface }}
-allow-hotplug {{ nat_router_interface }}
-iface {{ nat_router_interface }} inet static
+auto {{ nat_router_local_interface }}
+allow-hotplug {{ nat_router_local_interface }}
+iface {{ nat_router_local_interface }} inet static
   address {{ nat_router_ip }}
   netmask {{ nat_router_netmask }}
   post-up iptables-restore < /etc/iptables.ipv4.nat

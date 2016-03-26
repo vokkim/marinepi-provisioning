@@ -1,5 +1,5 @@
 ---
-nat_router_interface: wlan0
+nat_router_local_interface: wlan0
 nat_router_inet_interface: eth0
 nat_router_ip: 192.168.74.1
 nat_router_netmask: 255.255.255.0

@@ -7,6 +7,6 @@ COMMIT
 :INPUT ACCEPT [64:3883]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [44:4432]
--A FORWARD -i {{ nat_router_inet_interface }} -o {{ nat_router_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
--A FORWARD -i {{ nat_router_interface }} -o {{ nat_router_inet_interface }} -j ACCEPT
+-A FORWARD -i {{ nat_router_inet_interface }} -o {{ nat_router_local_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i {{ nat_router_local_interface }} -o {{ nat_router_inet_interface }} -j ACCEPT
 COMMIT

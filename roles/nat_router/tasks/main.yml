@@ -39,12 +39,12 @@
 - name: Remove hotspot interface reference from the main interface file 
   replace:
     dest=/etc/network/interfaces
-    regexp='^.*{{ nat_router_interface }}(.|\n)*?(\n|\Z)$'
+    regexp='^.*{{ nat_router_local_interface }}(.|\n)*?(\n|\Z)$'
     replace=''
   notify: restart-networking
 
 - name: Add separate file for hotspot to interface.d
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_interface }}_hotspot.cfg
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_local_interface }}_hotspot.cfg
   notify: restart-networking
 
 ##############################################################################
