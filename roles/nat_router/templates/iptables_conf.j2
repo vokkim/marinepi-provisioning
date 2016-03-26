@@ -12,4 +12,7 @@ COMMIT
 -A INPUT -i {{ nat_router_inet_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -i {{ nat_router_local_interface }} -j ACCEPT
 -A INPUT -i lo -j ACCEPT
+{% for rule in nat_router_fw_input_rules %}
+{{ rule }}
+{% endfor %}
 COMMIT
