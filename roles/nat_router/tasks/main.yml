@@ -54,6 +54,9 @@
   lineinfile: dest=/etc/sysctl.conf regexp='.*net.ipv4.ip_forward.*' line='net.ipv4.ip_forward=1'
   notify: reload_sysctl
 
+# Run handlers to get all network interfaces up before applying firewall configuration
+- meta: flush_handlers
+
 - name: iptables config file
   template: src=iptables_conf.j2 dest=/etc/iptables.ipv4.nat
   register: iptables_config
@@ -61,6 +64,3 @@
 - name: Import iptables config
   shell: iptables-restore < /etc/iptables.ipv4.nat
   when: iptables_config.changed
-
-# Reboot due to possible changes now
-- meta: flush_handlers
