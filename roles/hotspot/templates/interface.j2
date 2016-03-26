@@ -1,8 +1,0 @@
-# Hotspot
-
-auto {{ hotspot_interface }}
-allow-hotplug {{ hotspot_interface }}
-iface {{ hotspot_interface }} inet static
-  address {{ hotspot_ip }}
-  netmask {{ hotspot_netmask }}
-  post-up iptables-restore < /etc/iptables.ipv4.nat
