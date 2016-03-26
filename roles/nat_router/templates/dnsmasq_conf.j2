@@ -3,8 +3,9 @@ bogus-priv
 no-resolv
 no-poll
 expand-hosts
-server={{ nat_router_dns1 }}
-server={{ nat_router_dns2 }}
+{% for host in nat_router_dns_servers %}
+server={{ host }}
+{% endfor %}
 listen-address=127.0.0.1
 cache-size=10000
 local-ttl=300
