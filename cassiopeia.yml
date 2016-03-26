@@ -21,21 +21,20 @@
   gather_facts: yes
   sudo: yes
 
-  vars:
-    - hotspot_ssid: "{{ lookup('env','HOTSPOT_SSID') }}"
-    - hotspot_passphrase: "{{ lookup('env','HOTSPOT_PASSPHRASE') }}"
-
   roles:
     - common
+    - huawei_e3372h
     - hotspot
+    - role: nat_router
+      nat_router_fw_input_rules:
+        - "-A FORWARD -i eth1 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT"
+        - "-A FORWARD -i wlan0 -o eth1 -j ACCEPT"
+        - "-A FORWARD -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT"
+        - "-A FORWARD -i eth0 -o eth1 -j ACCEPT"
+      nat_router_inet_interface: eth1
     - canboat
     - node
     - signalk
 
   handlers:
     - include: handlers/handlers.yml
-
-  tasks:
-    - name: ALL DONE!
-      pause: prompt="Press [Enter] to reboot."
-      notify: reboot
