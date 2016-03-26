@@ -55,15 +55,11 @@
   notify: reload_sysctl
 
 - name: iptables config file
-  template: src=iptables_conf.j2 dest=/tmp/iptables.conf
+  template: src=iptables_conf.j2 dest=/etc/iptables.ipv4.nat
   register: iptables_config
 
-- name: Import IPTables config
-  shell: iptables-restore < /tmp/iptables.conf
-  when: iptables_config.changed
-
-- name: Save IPTables configuration
-  shell: sh -c "iptables-save > /etc/iptables.ipv4.nat"
+- name: Import iptables config
+  shell: iptables-restore < /etc/iptables.ipv4.nat
   when: iptables_config.changed
 
 # Reboot due to possible changes now
