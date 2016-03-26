@@ -7,3 +7,4 @@ hotspot_dns1: 8.8.8.8
 hotspot_dns2: 4.4.4.4
 hotspot_dhcp_range: "192.168.74.100,192.168.74.150,24h"
 hotspot_dhcp_option: "option:router,192.168.74.1"
+nat_router_static_ips: []

@@ -23,6 +23,10 @@
   template: src=dnsmasq_conf.j2 dest=/etc/dnsmasq.conf
   notify: restart_dnsmasq
 
+- name: Add static IP addresses
+  template: src=static_hosts.conf.j2 dest=/etc/dnsmasq.d/static_hosts.conf
+  notify: restart_dnsmasq
+
 ##############################################################################
 # Interfaces
 
