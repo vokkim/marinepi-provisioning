@@ -44,7 +44,7 @@
   notify: restart-networking
 
 - name: Add separate file for hotspot to interface.d
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_local_interface }}_hotspot.cfg
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_local_interface }}_hotspot  # NOTE: filename must match ^[a-zA-Z0-9_-]+$ (no '.' allowed!)
   notify: restart-networking
 
 ##############################################################################
