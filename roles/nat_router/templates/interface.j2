@@ -5,4 +5,4 @@ allow-hotplug {{ nat_router_local_interface }}
 iface {{ nat_router_local_interface }} inet static
   address {{ nat_router_ip }}
   netmask {{ nat_router_netmask }}
-  post-up iptables-restore < /etc/iptables.ipv4.nat
+  post-up if [ -f /etc/iptables.ipv4.nat ]; then iptables-restore < /etc/iptables.ipv4.nat; fi
