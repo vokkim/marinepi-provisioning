@@ -21,8 +21,8 @@
 # Public variables
   vars:
     - hostname: sophia
-    - hotspot_inet_interface: wlan1
-    - hotspot_interface: wlan0
+    - nat_router_inet_interface: wlan1
+    - nat_router_local_interface: wlan0
 
 # Secret variables are stored in an ansible vault 
 # protected with a password in a file referenced via env variable
@@ -40,6 +40,7 @@
     - crda_domain
     - wificlient
     - hotspot
+    - nat_router
     - usb-serial
     - kplex
     - canboat
