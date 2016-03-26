@@ -18,7 +18,7 @@
 - name: Ensure interface.d source-dir reference
   lineinfile: 
     dest=/etc/network/interfaces 
-    line='source /etc/network/interfaces.d/*.cfg'  
+    line='source-directory /etc/network/interfaces.d'
   notify: restart-networking
   
 - name: Add separate file for hotspot to interface.d
