@@ -58,13 +58,6 @@
   template: src=iptables_conf.j2 dest=/tmp/iptables.conf
   register: iptables_config
 
-- name: Flush IPTables and NAT routing table
-  shell: "{{item}}"
-  with_items:
-    - 'iptables -F'
-    - 'iptables -t nat -F'
-  when: iptables_config.changed
-
 - name: Import IPTables config
   shell: iptables-restore < /tmp/iptables.conf
   when: iptables_config.changed
