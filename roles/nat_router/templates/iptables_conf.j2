@@ -6,7 +6,10 @@
 -A POSTROUTING -o {{ nat_router_inet_interface }} -j MASQUERADE
 COMMIT
 *filter
-:INPUT ACCEPT [64:3883]
+:INPUT DROP [64:3883]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [44:4432]
+-A INPUT -i {{ nat_router_inet_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i {{ nat_router_local_interface }} -j ACCEPT
+-A INPUT -i lo -j ACCEPT
 COMMIT
