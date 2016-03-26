@@ -12,6 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+##############################################################################
+#
+#  This role creates a simple "internet sharing" from nat_router_inet_interface to
+#  nat_router_local_interface using NAT and DHCP server. Traffic from the private network
+#  is NATed through the nat_router_inet_interface. DHCP server provides IP addresses on
+#  the nat_router_local_interface.
+#
+
 ---
 ##############################################################################
 # DNS and DHCP services

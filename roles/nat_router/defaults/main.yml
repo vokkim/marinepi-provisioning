@@ -1,3 +1,23 @@
+#############################################################################################
+#
+#  Default configuration for nat_router role
+#
+#  Static IP addresses can be allocated to the private network hosts by using nat_router_static_ips
+#  variable. For example:
+#
+#    - role: nat_router
+#      nat_router_static_ips:
+#        - “aa:bb:cc:dd:ee:ff, 10.10.0.1”
+#        - “11:22:33:44:55:66, 10.10.0.2”
+#
+#  By default all iptables firewall policies are ACCEPT, but additional rules to the INPUT chain
+#  can be added using nat_router_fw_input_rules variable. For example:
+#
+#    - role: nat_router
+#       nat_router_fw_input_rules:
+#         - "-A INPUT -i {{ nat_router_inet_interface }} -s 192.168.8.1 -j ACCEPT"    # Allow traffic from Huawei HiLink modem's private interface
+#
+#
 ---
 nat_router_local_interface: wlan0
 nat_router_inet_interface: eth0
