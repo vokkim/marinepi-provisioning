@@ -2,3 +2,4 @@
 hotspot_ssid: MarinePi
 hotspot_channel: 11
 hotspot_passphrase: NavigareNecesseEst
+hotspot_interface: wlan0
