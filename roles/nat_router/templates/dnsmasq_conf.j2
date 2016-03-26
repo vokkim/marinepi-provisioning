@@ -8,7 +8,7 @@ server={{ hotspot_dns2 }}
 listen-address=127.0.0.1
 cache-size=10000
 local-ttl=300
-interface=wlan0
+interface={{ hotspot_interface }}
 dhcp-range={{ hotspot_dhcp_range }}
 dhcp-option={{ hotspot_dhcp_option }}
 
