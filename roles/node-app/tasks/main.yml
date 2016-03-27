@@ -9,6 +9,15 @@
 #    node_app_git_repo: "<url-to-application-git-repo>"
 #    node_app_main: "main.js"
 #
+# This role uses systemd to bind by default to port 80. You need to adjust
+# the application to listen to the systemd managed port:
+#  var SD_LISTEN_FDS_START = 3;
+#  if (process.env.LISTEN_FDS) {
+#      server.listen({fd: SD_LISTEN_FDS_START});
+#  } else {
+#      server.listen(8080);
+#  }
+#
 # Multiple applications can be installed by including the role many times
 # using different parameters.
 #
@@ -31,10 +40,19 @@
   template: src=node_app_systemd_script.j2 dest=/etc/systemd/system/{{ node_app_name }}.service owner=root group=root mode=0644
   register: unit_file
 
+- name: Install systemd socket file
+  template: src=node_app_systemd_socket.j2 dest=/etc/systemd/system/{{ node_app_name }}.socket owner=root group=root mode=0644
+  register: socket_file
+
 - name: Reload systemd
   command: systemctl daemon-reload
-  when: unit_file.changed
+  when: unit_file.changed or socket_file.changed
+
+- name: Restart & enable socket
+  command: systemctl enable {{ node_app_name }}.socket
+  command: systemctl start {{ node_app_name }}.socket
+  when: socket_file.changed
 
 - name: Restart application
   service: name={{ node_app_name }} state=restarted enabled=yes
-  when: git_pull.changed or unit_file.changed
+  when: git_pull.changed or socket_file.changed or unit_file.changed
