@@ -1,7 +1,3 @@
 ---
 - name: restart_dnsmasq
   service: name=dnsmasq state=restarted enabled=yes
-
-- name: reload_sysctl
-  shell: "sysctl -p"
-  
