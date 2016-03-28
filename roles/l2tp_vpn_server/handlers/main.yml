@@ -1,0 +1,6 @@
+---
+- name: restart_ipsec
+  service: name=ipsec state=restarted enabled=yes
+
+- name: restart_xl2tpd
+  service: name=xl2tpd state=restarted enabled=yes

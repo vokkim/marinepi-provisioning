@@ -1,0 +1,5 @@
+---
+l2tp_vpn_psk: "default_password"   # Override this when using the role!
+l2tp_vpn_listen_addr: 192.168.8.100
+l2tp_vpn_local_ip: 192.168.74.1
+l2tp_vpn_local_ip_range: 192.168.74.200-192.168.74.250

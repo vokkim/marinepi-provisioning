@@ -1,0 +1,12 @@
+#
+# This is a hook script for dhcpcd DHCP client
+#
+# The script restarts ipsec service if a network interface with a given IP address comes up.
+# The mechanism is needed to ensure that the ipsec service listens also on the given IP
+# even if it is bound/unbound dynamically (e.g. USB cellular device).
+#
+
+if [ $if_up -a $new_ip_address = "{{ l2tp_vpn_listen_addr }}" ]; then
+  logger -t dhcpcd "Restarting ipsec service, because interface with IP {{ l2tp_vpn_listen_addr }} came up.."
+  service ipsec restart
+fi

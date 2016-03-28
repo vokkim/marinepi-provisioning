@@ -1,0 +1,12 @@
+[global]
+
+[lns default]
+ip range = {{ l2tp_vpn_local_ip_range }}
+local ip = {{ l2tp_vpn_local_ip }}
+assign ip = yes
+require chap = yes
+refuse pap = yes
+require authentication = yes
+name = raspi-vpn-server
+pppoptfile = /etc/ppp/options.xl2tpd
+length bit = yes
