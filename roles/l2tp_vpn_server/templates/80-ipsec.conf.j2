@@ -6,7 +6,7 @@
 # even if it is bound/unbound dynamically (e.g. USB cellular device).
 #
 
-if [ $if_up ]; then
+if [ $if_up -a $reason = "BOUND" -o $reason = "REBIND" -o $reason = "REBOOT" ]; then
   logger -t dhcpcd "Restarting ipsec service because new interface with IP $new_ip_address came up.."
   service ipsec restart
 fi
