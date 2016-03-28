@@ -21,6 +21,9 @@
   gather_facts: yes
   sudo: yes
 
+  vars:
+    - hostname: cassiopeia
+
   roles:
     - common
     - huawei_e3372h
@@ -34,7 +37,10 @@
       nat_router_inet_interface: eth1
     - canboat
     - node
-    - signalk
+    - role: node-app
+      node_app_name: "signalk-server"
+      node_app_git_repo: "https://github.com/SignalK/signalk-server-node.git"
+      node_app_main: "bin/signalk-server"
 
   handlers:
     - include: handlers/handlers.yml
