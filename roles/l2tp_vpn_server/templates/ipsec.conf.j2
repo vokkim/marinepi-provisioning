@@ -13,7 +13,7 @@ conn L2TP-PSK
 	ikelifetime=8h
 	keylife=1h
 	type=transport
-	left={{ l2tp_vpn_listen_addr }}
+	left=%defaultroute
 	leftprotoport=17/%any
 	right=%any
 	rightprotoport=17/%any
