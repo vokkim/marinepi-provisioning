@@ -42,5 +42,14 @@
       node_app_git_repo: "https://github.com/SignalK/signalk-server-node.git"
       node_app_main: "bin/signalk-server"
 
+  tasks:
+    - name: "Install mdns dependency"
+      apt: pkg=libavahi-compat-libdnssd-dev state=latest
+
+    - name: "Install mdns for Signal K server"
+      command: "npm install mdns"
+      args:
+        chdir: /opt/signalk-server
+
   handlers:
     - include: handlers/handlers.yml
