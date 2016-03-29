@@ -41,6 +41,7 @@
       node_app_name: "signalk-server"
       node_app_git_repo: "https://github.com/SignalK/signalk-server-node.git"
       node_app_main: "bin/signalk-server"
+      node_app_env: "NODE_ENV=production"
 
   tasks:
     - name: "Install mdns dependency"
