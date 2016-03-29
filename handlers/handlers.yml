@@ -8,6 +8,9 @@
   shell: if [ -f "/boot/initrd.img-$(uname -r)" ]; then update-initramfs -u -k $(uname -r); else update-initramfs -c -k $(uname -r); fi
   notify: reboot
 
+- name: reload_sysctl
+  shell: "sysctl -p"
+
 # Keep these at the end to run the reboot handler after all other handlers
 - name: reboot
   shell: shutdown -r now &

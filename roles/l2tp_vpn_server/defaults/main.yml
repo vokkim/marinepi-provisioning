@@ -1,0 +1,7 @@
+#
+#  Defaults for l2tp_vpn_server role
+#
+---
+l2tp_vpn_psk: "default_password"   # Override this when using the role!
+l2tp_vpn_local_ip: 192.168.74.1                            # IP address of the VPN host in the private network
+l2tp_vpn_local_ip_range: 192.168.74.200-192.168.74.250     # This range is served by the ipsec server -> should not overlap with dhcp server's range!
