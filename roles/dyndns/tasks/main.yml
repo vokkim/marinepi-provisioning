@@ -1,0 +1,50 @@
+#
+#  A role for updating dynamic DNS binding using inadyn
+#
+#  This role installs and configures inadyn to start at boot and check & update DDNS binding at regular
+#  intervals.
+#
+#  In addition to defaults in defaults/main.yml the following variables must be set:
+#
+#    - dyndns_username      (username for your DDNS service)
+#    - dyndns_password      (password for your DDNS service)
+#    - dyndns_hostname      (hostname to be updated, e.g. my-raspi.raspberryip.org)
+#
+#
+#  This can be done e.g. by adding the role like this:
+#
+#      - role: dyndns
+#        dyndns_username: <username>
+#        dyndns_password: <password>
+#        dyndns_hostname: <hostname-to-update>
+#
+---
+- name: Check required variables
+  fail: msg="Required variable '{{ item }}' is not defined!"
+  when: "{{ item }} is not defined"
+  with_items:
+    - dyndns_username
+    - dyndns_password
+    - dyndns_hostname
+
+- name: Install inadyn
+  apt: pkg=inadyn state=latest
+
+- name: Set inadyn config
+  template: src=inadyn.conf.j2 dest=/etc/inadyn.conf mode=600
+  register: config_file
+
+- name: Install systemd unit file
+  copy: src=inadyn.service dest=/etc/systemd/system/inadyn.service owner=root group=root mode=0644
+  register: unit_file
+
+- name: Add dhcpcd hook that restarts inadyn when new inet interface comes up
+  copy: src=80-inadyn.dhcpcd.conf dest=/lib/dhcpcd/dhcpcd-hooks/80-inadyn.conf
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  when: unit_file.changed
+
+- name: Restart inadyn
+  service: name=inadyn state=restarted enabled=yes
+  when: config_file.changed or unit_file.changed
