@@ -37,7 +37,7 @@
   notify: restart_ipsec
 
 - name: Add dhcpcd hook that restarts ipsec when inet interface comes up
-  template: src=80-ipsec.conf.j2 dest=/lib/dhcpcd/dhcpcd-hooks/80-ipsec.conf
+  copy: src=80-ipsec.dhcpcd.conf dest=/lib/dhcpcd/dhcpcd-hooks/80-ipsec.conf
 
 - name: Set IPSec PSK secret
   lineinfile: 'dest=/etc/ipsec.secrets regexp="^%any %any: PSK.*" line="%any %any: PSK \"{{ l2tp_vpn_psk }}\"" create=yes'
