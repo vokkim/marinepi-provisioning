@@ -1,0 +1,11 @@
+#
+# In addition to these defaults you MUST set the following variables:
+#
+#    - inadyn_ddns_username      (username for your DDNS service)
+#    - inadyn_ddns_password      (password for your DDNS service)
+#    - inadyn_ddns_hostname      (hostname to be updated, e.g. my-raspi.raspberryip.org)
+#
+---
+inadyn_ddns_check_period_s: 60                        # How often the check for changed IP is done
+inadyn_ddns_forced_update_period_s: 21600             # How often DDNS binding is refreshed even if the IP address has not (6 hours by default)
+inadyn_ddns_system: default@freedns.afraid.org        # See https://github.com/troglobit/inadyn for other supported providers

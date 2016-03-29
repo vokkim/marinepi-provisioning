@@ -6,26 +6,26 @@
 #
 #  In addition to defaults in defaults/main.yml the following variables must be set:
 #
-#    - dyndns_username      (username for your DDNS service)
-#    - dyndns_password      (password for your DDNS service)
-#    - dyndns_hostname      (hostname to be updated, e.g. my-raspi.raspberryip.org)
+#    - inadyn_ddns_username      (username for your DDNS service)
+#    - inadyn_ddns_password      (password for your DDNS service)
+#    - inadyn_ddns_hostname      (hostname to be updated, e.g. my-raspi.raspberryip.org)
 #
 #
 #  This can be done e.g. by adding the role like this:
 #
 #      - role: dyndns
-#        dyndns_username: <username>
-#        dyndns_password: <password>
-#        dyndns_hostname: <hostname-to-update>
+#        inadyn_ddns_username: <username>
+#        inadyn_ddns_password: <password>
+#        inadyn_ddns_hostname: <hostname-to-update>
 #
 ---
 - name: Check required variables
   fail: msg="Required variable '{{ item }}' is not defined!"
   when: "{{ item }} is not defined"
   with_items:
-    - dyndns_username
-    - dyndns_password
-    - dyndns_hostname
+    - inadyn_ddns_username
+    - inadyn_ddns_password
+    - inadyn_ddns_hostname
 
 - name: Install inadyn
   apt: pkg=inadyn state=latest
