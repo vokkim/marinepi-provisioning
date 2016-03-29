@@ -1,3 +1,15 @@
+##############################################################################
+#
+#  Installs usb_modeswitch and custom udev rule to support Huawei USB modems
+#
+#  Also supports setting up port forwards from internet to Huawei's local address
+#  using UPnP.
+#
+#  Usage:
+#
+#    - role: huawei_e3372h
+#      upnpc_port_forwards: "500 UDP 4500 UDP 1701 UDP"     # These ports are forwarded from public IP to 192.168.8.100
+#
 ---
 - name: Install usb_modeswitch
   apt: pkg=usb-modeswitch state=latest
