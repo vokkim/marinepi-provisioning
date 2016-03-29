@@ -1,3 +1,26 @@
+#################################################################################################################
+#
+#  This role creates L2TP over IPSec VPN server using openswan and xl2tpd. Remote clients connecting to the VPN
+#  server are given a private IP address from the same network where the VPN server is. Traffic is tunneled at
+#  Layer 2 level and thus no additional routing is needed to reach other hosts in the same private network. By default
+#  the VPN server listens the interface through which the server host communicates to its default gateway (= normally
+#  the internet facing interface).
+#
+#  Add role and set VPN password & pre-shared key:
+#
+#    - role: l2tp_vpn_server
+#      l2tp_vpn_psk: "my-password"
+#
+#  'l2tp_vpn_psk' is used both as VPN authentication password and IPSec tunnel's pre-shared key.
+#  Username for VPN authentication is not checked.
+#
+#  In order for the VPN connection to be established the following ports must be open to internet (and have
+#  working port forwarding if VPN host is behind NAT):
+#
+#    - 500 UDP
+#    - 4500 UDP
+#    - 1701 UDP
+#
 ---
 - name: Install packages
   apt: pkg={{ item }} state=latest
