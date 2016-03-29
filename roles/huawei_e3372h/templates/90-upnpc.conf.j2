@@ -1,0 +1,11 @@
+#
+# This is a hook script for dhcpcd DHCP client
+#
+# The script uses upnpc to set up port farwardings for the given ports when
+# a network interface with the specified IP address comes up.
+#
+
+if [ $if_up -a $new_ip_address = "{{ huawei_local_ip }}" ]; then
+  logger -t upnpc "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
+  upnpc -r {{ upnpc_port_forwards }}
+fi

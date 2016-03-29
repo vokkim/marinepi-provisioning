@@ -15,3 +15,7 @@
 - name: Add udev rule to run usb_modeswitch with custom config
   copy: src=90-huawei-e3772h.rules dest=/etc/udev/rules.d/90-huawei-e3772h.rules
   notify: restart-udev
+
+- name: Add dhcpcd hook to set up port forwards
+  template: src=90-upnpc.conf.j2 dest=/lib/dhcpcd/dhcpcd-hooks/90-upnpc.conf
+  when: upnpc_port_forwards is defined
