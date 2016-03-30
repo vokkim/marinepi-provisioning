@@ -15,4 +15,5 @@ if [ ! -f "$PLAYBOOK" ]; then
   exit 1
 fi
 
+export ANSIBLE_ROLES_PATH=$(dirname $0)/roles
 ansible-playbook -i $HOST, $PLAYBOOK
