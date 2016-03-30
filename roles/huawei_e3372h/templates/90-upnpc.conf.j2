@@ -6,6 +6,6 @@
 #
 
 if [ $if_up -a $new_ip_address = "{{ huawei_local_ip }}" ]; then
-  logger -t upnpc "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
+  logger -t dhcpcd "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
   upnpc -r {{ upnpc_port_forwards }}
 fi
