@@ -21,8 +21,6 @@
 # Public variables
   vars:
     - hostname: sophia
-    - nat_router_inet_interface: wlan1
-    - nat_router_local_interface: wlan0
 
 # Secret variables are stored in an ansible vault 
 # protected with a password in a file referenced via env variable
@@ -32,20 +30,43 @@
 # ansible-vault [encrypt|decrypt|view] secrets/sophia.yml
 
   vars_files:
-    - secrets/sophia.yml
-  
+    - ../../secrets/sophia.yml
+
   roles:
     - common
     - ups
     - crda_domain
     - wificlient
     - hotspot
-    - nat_router
+    - role: nat_router
+      nat_router_local_interface: wlan0
+      nat_router_inet_interface: wlan1
+    - role: l2tp_vpn_server
+      l2tp_vpn_psk: "{{ sophia.l2tp_vpn_passphrase }}"
     - usb-serial
     - kplex
     - canboat
     - node
-    - signalk
+    - role: node-app
+      node_app_name: "signalk-server"
+      node_app_git_repo: "https://github.com/SignalK/signalk-server-node.git"
+      node_app_main: "bin/signalk-server"
+      node_app_env: "NODE_ENV=production"
+
+  tasks:
+    - name: "Install mdns dependency"
+      apt: pkg=libavahi-compat-libdnssd-dev state=latest
+
+    - name: "Install mdns for Signal K server"
+      command: "npm install mdns"
+      args:
+        chdir: /opt/signalk-server
+
+    - name: Install miniupnpc
+      apt: pkg=miniupnpc state=latest
+
+    - name: Punch holes to uplink fw
+      shell: "upnpc -r 500 UDP 4500 UDP 1701 UDP"
 
   handlers:
-    - include: handlers/handlers.yml
+    - include: ../../handlers/handlers.yml
