@@ -1,7 +1,7 @@
 MarinePi
 ========
 
-Ansible scripts to setup a Raspberry Pi for boat use, providing access to various data sources on board both via wired and wireless connections. Features include
+[Ansible](https://en.wikipedia.org/wiki/Ansible_(software)) scripts to setup a Raspberry Pi for boat use, providing access to various data sources on board both via wired and wireless connections. Features include:
 - Signal K node server with canboat
 - wifi hotspot
 - (marina) wifi access with routing
