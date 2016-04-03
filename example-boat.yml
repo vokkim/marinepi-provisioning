@@ -24,14 +24,13 @@
   vars:
     - hostname: marinepi
     - wificlient_networks:
-        <your ssid 1 here>: <your passphrase 1 here>
-        <your ssid 2 here>: <your passphrase 2 here>
-        <your ssid n here>: <your passphrase n here>
+        <your marina ssid 1 here>: <your marina 1 wifi passphrase here>
+        <your marina ssid 2 here>: <your marina 2 wifi passphrase here>
     - nat_router_inet_interface: wlan1
     - nat_router_local_interface: wlan0
     - hotspot_ssid: <your hotspot ssid here>
     - hotspot_passphrase: <your hotspot passphrase here>
-  
+
   roles:
     - common
     - ups
