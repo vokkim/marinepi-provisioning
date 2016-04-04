@@ -36,21 +36,8 @@
         - "-A FORWARD -i eth0 -o eth1 -j ACCEPT"
       nat_router_inet_interface: eth1
     - canboat
-    - node
-    - role: node-app
-      node_app_name: "signalk-server"
-      node_app_git_repo: "https://github.com/SignalK/signalk-server-node.git"
-      node_app_main: "bin/signalk-server"
-      node_app_env: "NODE_ENV=production"
-
-  tasks:
-    - name: "Install mdns dependency"
-      apt: pkg=libavahi-compat-libdnssd-dev state=latest
-
-    - name: "Install mdns for Signal K server"
-      command: "npm install mdns"
-      args:
-        chdir: /opt/signalk-server
+    - signalk
+    - route53-ddns
 
   handlers:
-    - include: handlers/handlers.yml
+    - include: ../../handlers/handlers.yml
