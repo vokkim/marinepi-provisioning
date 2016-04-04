@@ -11,7 +11,7 @@
     - hostname: raspigw
 
   vars_files:
-    - ../../secrets/chacal.yml
+    - secrets.yml
 
   roles:
     - common
