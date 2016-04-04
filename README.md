@@ -54,6 +54,16 @@ aws_secret_access_key: 'YOUR_SECRET_ACCESS_KEY'
 ```
 with the information for this limited identity.
 
+wificlient
+----------
+Installs and configures the software the Pi needs to act as a wifi client. Override variables:
+```
+wificlient_interface: wlan1
+wificlient_networks: 
+  defaultssid: defaultpassphrase
+```
+You can add multiple ssid: passphrase pairs as new lines to support several networks, if needed.
+
 Credits
 =======
 
