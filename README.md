@@ -19,6 +19,41 @@ Usage
 1. Edit configuration in `example-boat.yml` to match your environment and fill in your hotspot details
 1. Run `./provision.sh <ip-of-your-raspi> example-boat.yml` to provision the software & configurations for the roles in example-boat.yml.
 
+
+Roles
+=====
+
+You define what features you want to provision by adding roles to your playbook.
+
+signalk
+-------
+Installs the Signal K Node server under /opt/signalk. Uses `node` and `node-app` roles to install Node.js and run under systemd.
+
+hotspot
+-------
+Installs and configures the software needed for the Pi to act as a wifi hotspot. Override variables:
+```
+hotspot_ssid: MarinePi
+hotspot_channel: 11
+hotspot_passphrase: NavigareNecesseEst
+hotspot_interface: wlan0
+```
+
+canboat
+-------
+Installs canboat utilities to interface with the NMEA 2000 network.
+
+route53-ddns
+------------
+Installs a cron script that periodically checks your external IP address and updates [Amazon's Route 53 name server information to act as dynamic DNS setup](https://willwarren.com/2014/07/03/roll-dynamic-dns-service-using-amazon-route53/). Installs Amazon's command line tools as a dependency.
+
+For minimal priviledges you should create a limited AWS identity for use with this profile and attach the policy `AmazonRoute53FullAccess`. In your own playbook define variables
+```
+aws_access_key_id: 'YOUR_ACCESS_KEY_ID'
+aws_secret_access_key: 'YOUR_SECRET_ACCESS_KEY'
+```
+with the information for this limited identity.
+
 Credits
 =======
 
