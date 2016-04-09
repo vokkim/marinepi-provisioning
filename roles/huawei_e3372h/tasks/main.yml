@@ -30,4 +30,4 @@
 
 - name: Add dhcpcd hook to set up port forwards
   template: src=90-upnpc.conf.j2 dest=/lib/dhcpcd/dhcpcd-hooks/90-upnpc.conf
-  when: upnpc_port_forwards is defined
+  when: upnpc_port_forwards is defined or upnpc_port_redirects is defined
