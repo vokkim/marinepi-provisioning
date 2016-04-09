@@ -58,6 +58,7 @@
     - screen
     - dnsutils
     - wavemon
+    - telnet
   notify: reboot
 
 - name: Autoremove any unused packages
