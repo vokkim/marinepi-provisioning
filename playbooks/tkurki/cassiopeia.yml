@@ -27,6 +27,8 @@
   roles:
     - common
     - role: huawei_e3372h
+      upnpc_port_redirects:
+        - "192.168.8.100 22 2222 tcp"
       upnpc_port_forwards: "500 UDP 4500 UDP 1701 UDP"
     - l2tp_vpn_server
     - hotspot
