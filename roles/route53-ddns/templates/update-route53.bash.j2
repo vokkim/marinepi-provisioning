@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# Credits: https://willwarren.com/2014/07/03/roll-dynamic-dns-service-using-amazon-route53/
-
-# (optional) You might need to set your PATH variable at the top here
-# depending on how you run this script
-#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Original from: https://willwarren.com/2014/07/03/roll-dynamic-dns-service-using-amazon-route53/
 
 # Hosted Zone ID e.g. BJBK35SKMM9OE
-ZONEID={{ route53_zoneid}}
+ZONEID={{ route53_zoneid }}
 
 # The CNAME you want to update e.g. hello.example.com
 RECORDSET={{ route53_cname }}
@@ -22,6 +18,8 @@ TYPE="A"
 
 # Get the external IP address from OpenDNS (more reliable than other providers)
 IP=`dig +short myip.opendns.com @resolver1.opendns.com`
+
+ROUTE53IP=`/usr/local/bin/aws route53 list-resource-record-sets  --hosted-zone-id  $ZONEID --output text | grep -A1 $RECORDSET | tail -1 | cut  -f 2`
 
 function valid_ip()
 {
@@ -40,23 +38,7 @@ function valid_ip()
     return $stat
 }
 
-# Get current dir
-# (from http://stackoverflow.com/a/246128/920350)
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-IPFILE="$DIR/update-route53.ip"
-
-if ! valid_ip $IP; then
-    echo "Invalid IP address: $IP"
-    exit 1
-fi
-
-# Check if the IP has changed
-if [ ! -f "$IPFILE" ]
-    then
-    touch "$IPFILE"
-fi
-
-if grep -Fxq "$IP" "$IPFILE"; then
+if [ $IP == $ROUTE53IP ]; then
     # code if found
     echo "IP is still $IP. Exiting"
     exit 0
@@ -94,6 +76,3 @@ EOF
     # Clean up
     rm $TMPFILE
 fi
-
-# All Done - cache the IP address for next time
-echo "$IP" > "$IPFILE"
