@@ -1,0 +1,12 @@
+---
+kplex_name: kplex_1.3-1_armhf
+kplex_url: http://www.stripydog.com/download/{{ kplex_name }}.deb
+
+kplex_serial_inputs: []
+
+kplex_output_transport: tcp
+
+kplex_output_params:
+  - "device=wlan0"
+  - "port=10110"
+  - "mode=server"
