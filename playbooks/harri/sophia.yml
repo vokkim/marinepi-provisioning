@@ -44,8 +44,16 @@
     - role: l2tp_vpn_server
       l2tp_vpn_psk: "{{ l2tp_vpn_passphrase }}"
     - usb-serial
-    - kplex
     - signalk
+    - role: kplex
+      kplex_serial_inputs:
+        - "/dev/nexus"
+        - "/dev/gps"
+        - "/dev/ais"
+      kplex_output_params:
+        - "device=wlan0"
+        - "port=10110"
+        - "mode=server"
 
   tasks:
     - name: Install miniupnpc

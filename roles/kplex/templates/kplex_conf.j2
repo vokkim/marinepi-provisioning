@@ -1,0 +1,16 @@
+# Ansible-generated configuration file
+
+# Serial inputs
+{% for device in kplex_serial_inputs %}
+[serial]
+filename={{ device }}
+direction=in
+
+{% endfor %}
+
+# Output
+[{{ kplex_output_transport }}]
+{% for param in kplex_output_params %}
+{{ param }}
+{% endfor %}
+direction=out
