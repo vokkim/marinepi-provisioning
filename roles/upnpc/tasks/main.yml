@@ -1,0 +1,20 @@
+##############################################################################
+#
+#  Attempts to set up port forwards and redirects via upnp 
+#  to the firewall on the network behind indicated interface
+#
+#  Usage:
+#
+#    - role: upnpc
+#      upnpc_interface: eth1
+#      upnpc_port_forwards: "500 udp 4500 udp 1701 udp" 
+#      upnpc_port_redirects: 
+#       - "192.168.8.100 22 2222 tcp"
+
+---
+- name: Install miniupnpc
+  apt: pkg=miniupnpc state=latest
+
+- name: Add dhcpcd hook to set up port forwards
+  template: src=90-upnpc.conf.j2 dest=/lib/dhcpcd/dhcpcd-hooks/90-upnpc.conf
+  when: upnpc_port_forwards is defined or upnpc_port_redirects is defined

@@ -1,0 +1,19 @@
+#
+# This is an Ansible generated hook script for dhcpcd DHCP client
+#
+# upnpc is used to set up port forwardings and/or redirects for the given ports 
+# when the specified network interface with a dhcpcd address comes up.
+#
+
+if [ $if_up -a $interface = {{ upnpc_interface }} -a $reason = BOUND ]; then
+{% if upnpc_port_forwards is defined %}
+  logger -t dhcpcd "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
+  upnpc -r {{ upnpc_port_forwards }}
+{% endif %}
+{% if upnpc_port_redirects is defined %}
+  {% for forward in upnpc_port_redirects %}
+    logger -t dhcpcd "Adding UPnP port forwards: {{ forward }}"
+    upnpc -a {{ forward }}
+  {% endfor %}
+{% endif %}
+fi
