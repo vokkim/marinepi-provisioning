@@ -40,7 +40,10 @@
         - "-A FORWARD -i eth0 -o eth1 -j ACCEPT"
       nat_router_inet_interface: eth1
     - canboat
-    - signalk
+    - role: signalk
+      node_app_env:
+        - "NODE_ENV=production"
+        - "SIGNALK_NODE_SETTINGS=/home/pi/cassiopeia-settings/signalk-server-settings.json"
     - route53-ddns
 
   tasks:
@@ -50,6 +53,9 @@
     - lineinfile: dest=/etc/udev/rules.d/99-cassiopeia-usb-devices.rules line="SUBSYSTEM==\"tty\", ACTION==\"add\", ATTRS{serial}==\"A901IPKN\", GROUP=\"pi\""
     - lineinfile: dest=/etc/udev/rules.d/99-cassiopeia-usb-devices.rules line="SUBSYSTEM==\"tty\", ACTION==\"add\", ATTRS{serial}==\"1FD34\", SYMLINK+=\"actisense\""
     - lineinfile: dest=/etc/udev/rules.d/99-cassiopeia-usb-devices.rules line="SUBSYSTEM==\"tty\", ACTION==\"add\", ATTRS{serial}==\"1FD34\", GROUP=\"pi\""
+    - name: Pull own settings from the repository
+      git: repo=https://github.com/tkurki/cassiopeia-settings dest=/home/pi/cassiopeia-settings force=yes version=master
+
 
   handlers:
     - include: ../../handlers/handlers.yml
