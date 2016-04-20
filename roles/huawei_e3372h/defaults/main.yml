@@ -1,2 +1,3 @@
 ---
 huawei_local_ip: 192.168.8.100
+upnpc_port_redirects: []
