@@ -1,3 +1,24 @@
+##############################################################################
+#
+#  Connects the host to a specified network as a wifi client.
+#
+#  Usage:
+#
+#    - role: wificlient
+#      wificlient_interface: wlan1
+#      wificlient_networks:
+#       - ssid: my_ssid
+#         psk: my_passphrase
+#         priority: 1              # optional
+#         scan_ssid: 0             # optional
+#
+#  You can add multiple networks by repeating the last four lines above, if needed. 
+#  Networks with hidden ssid can be enabled by setting scan_ssid: 1
+#
+#  From security point of view, network credentials could also be imported from 
+#  local environment variables or an Ansible vault.
+#  
+
 ---
 ##############################################################################
 # Max USB power output
