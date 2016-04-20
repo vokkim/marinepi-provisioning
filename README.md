@@ -60,10 +60,13 @@ wificlient
 Installs and configures the software the Pi needs to act as a wifi client. Override variables:
 ```
 wificlient_interface: wlan1
-wificlient_networks: 
-  defaultssid: defaultpassphrase
+wificlient_networks:
+  - ssid: defaultssid
+    psk: defaultpassphrase
+    priority: 1
+    scan_ssid: 0
 ```
-You can add multiple ssid: passphrase pairs as new lines to support several networks, if needed.
+You can add multiple networks by repeating the last four lines, if needed. 
 
 Credits
 =======
