@@ -23,6 +23,9 @@
     - canboat
     - mcp2515-can
     - crda_domain
+    - role: aws-cli
+      aws_access_key_id: "{{ chacal.aws.freyalogs.access_key }}"
+      aws_secret_access_key: "{{ chacal.aws.freyalogs.secret_key }}"
     - role: nat_router
       nat_router_local_interface: eth0
       nat_router_inet_interface: eth1
