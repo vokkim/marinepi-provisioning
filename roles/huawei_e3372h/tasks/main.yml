@@ -14,9 +14,6 @@
 - name: Install usb_modeswitch
   apt: pkg=usb-modeswitch state=latest
 
-- name: Install miniupnpc
-  apt: pkg=miniupnpc state=latest
-
 - name: Turn on max_usb_current
   lineinfile: dest=/boot/config.txt line='max_usb_current=1'
   notify: reboot
@@ -27,7 +24,3 @@
 - name: Add udev rule to run usb_modeswitch with custom config
   copy: src=90-huawei-e3772h.rules dest=/etc/udev/rules.d/90-huawei-e3772h.rules
   notify: restart-udev
-
-- name: Add dhcpcd hook to set up port forwards
-  template: src=90-upnpc.conf.j2 dest=/lib/dhcpcd/dhcpcd-hooks/90-upnpc.conf
-  when: upnpc_port_forwards is defined or upnpc_port_redirects is defined

@@ -1,11 +1,11 @@
 #
-# This is a hook script for dhcpcd DHCP client
+# This is an Ansible generated hook script for dhcpcd DHCP client
 #
-# The script uses upnpc to set up port forwardings for the given ports when
-# a network interface with the specified IP address comes up.
+# upnpc is used to set up port forwardings and/or redirects for the given ports 
+# when the specified network interface with a dhcpcd address comes up.
 #
 
-if [ $if_up -a $new_ip_address = "{{ huawei_local_ip }}" ]; then
+if [ $if_up -a $interface = {{ upnpc_interface }} -a $reason = BOUND ]; then
 {% if upnpc_port_forwards is defined %}
   logger -t dhcpcd "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
   upnpc -r {{ upnpc_port_forwards }}
