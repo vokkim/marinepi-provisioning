@@ -9,6 +9,7 @@
 
   vars:
     - hostname: freya
+    - root_ro_enabled: false
 
   vars_files:
     - secrets.yml
@@ -20,6 +21,7 @@
       upnpc_interface: eth1
       upnpc_port_forwards: "500 UDP 4500 UDP 1701 UDP"
     - canboat
+    - mcp2515-can
     - crda_domain
     - role: nat_router
       nat_router_local_interface: eth0
@@ -34,3 +36,4 @@
       inadyn_ddns_username: "{{ chacal.inadyn_ddns_username }}"
       inadyn_ddns_password: "{{ chacal.inadyn_ddns_password }}"
       inadyn_ddns_hostname: "{{ chacal.inadyn_ddns_hostname.freya }}"
+    - root-ro
