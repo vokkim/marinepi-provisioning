@@ -16,6 +16,8 @@
   roles:
     - common
     - role: huawei_e3372h
+    - role: upnpc
+      upnpc_interface: eth1
       upnpc_port_forwards: "500 UDP 4500 UDP 1701 UDP"
     - role: nat_router
       nat_router_local_interface: eth0
