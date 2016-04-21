@@ -30,10 +30,10 @@
 
   tasks:
     - name: Create .ssh
-      file: state=directory dest=/home/{{ ansible_ssh_user }}/.ssh/
+      file: state=directory dest=/home/{{ ansible_ssh_user }}/.ssh/ owner={{ ansible_ssh_user }} group={{ ansible_ssh_user }}
 
     - name: Push SSH key to the Raspberry Pi
-      copy: src={{ ssh_public_key }} dest=/home/{{ ansible_ssh_user }}/.ssh/authorized_keys owner={{ ansible_ssh_user }}
+      copy: src={{ ssh_public_key }} dest=/home/{{ ansible_ssh_user }}/.ssh/authorized_keys owner={{ ansible_ssh_user }} group={{ ansible_ssh_user }}
 
     - name: Change default user password
       shell: echo {{ ansible_ssh_user }}:{{ new_password }} | sudo chpasswd
