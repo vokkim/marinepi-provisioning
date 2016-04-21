@@ -35,7 +35,6 @@
   roles:
     - common
     - ups
-    - crda_domain
     - wificlient
     - hotspot
     - role: nat_router
