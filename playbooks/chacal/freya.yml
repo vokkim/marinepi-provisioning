@@ -39,4 +39,8 @@
       inadyn_ddns_username: "{{ chacal.inadyn_ddns_username }}"
       inadyn_ddns_password: "{{ chacal.inadyn_ddns_password }}"
       inadyn_ddns_hostname: "{{ chacal.inadyn_ddns_hostname.freya }}"
+    - role: node-app
+      node_app_name: "freya-server"
+      node_app_git_repo: "https://github.com/chacal/freya-server.git"
+      node_app_main: "freya-server.js"
     - root-ro
