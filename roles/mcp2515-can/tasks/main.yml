@@ -18,7 +18,7 @@
   lineinfile:
     dest: /etc/rc.local
     regexp: '^ip link set {{ mcp2515_can_device }} up type can bitrate'
-    line: "ip link set {{ mcp2515_can_device }} up type can bitrate {{ mcp2515_bitrate }}"
+    line: "ip link set {{ mcp2515_can_device }} up type can bitrate {{ mcp2515_bitrate }} || true"
     insertbefore: "^exit 0$"
   notify: reboot
 
@@ -26,7 +26,7 @@
   lineinfile:
     dest: /etc/rc.local
     regexp: '^ip link set {{ mcp2515_can_device }} txqueuelen'
-    line: "ip link set {{ mcp2515_can_device }} txqueuelen {{ mcp2515_tx_queuelen }}"
+    line: "ip link set {{ mcp2515_can_device }} txqueuelen {{ mcp2515_tx_queuelen }}  || true"
     insertafter: "^ip link set {{ mcp2515_can_device }} up"
   notify: reboot
 
