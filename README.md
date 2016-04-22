@@ -5,7 +5,7 @@ MarinePi
 - [Signal K](http://signalk.org/) [node server](https://github.com/SignalK/signalk-server-node) with [canboat](https://github.com/canboat/canboat)
 - wifi hotspot
 - (marina) wifi access with routing
-- 3/4G Internet connectivity with Huawei e3772
+- 3/4G Internet connectivity with Huawei e3372
 - VPN access
 - various dynamic dns providers (inadyn, Route 53)
 - read-only root partition
