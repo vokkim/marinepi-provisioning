@@ -55,6 +55,9 @@
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{ nat_router_local_interface }}_hotspot  # NOTE: filename must match ^[a-zA-Z0-9_-]+$ (no '.' allowed!)
   notify: restart-networking
 
+- name: Disable DHCP client on local interface
+  lineinfile: dest=/etc/dhcpcd.conf regexp='^denyinterfaces .*' line='denyinterfaces {{ nat_router_local_interface }}'
+
 ##############################################################################
 # Routing and NATting
 
