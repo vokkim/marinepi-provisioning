@@ -42,5 +42,24 @@
     - role: node-app
       node_app_name: "freya-server"
       node_app_git_repo: "https://github.com/chacal/freya-server.git"
-      node_app_main: "freya-server.js"
+      node_app_main: "freya-server.js /dev/ngw-1 /dev/tacktick /mnt/usb"
+      node_app_user: "root"
+      node_app_group: "root"
     - root-ro
+
+  tasks:
+    - name: Create device link for NGW-1 serial port
+      lineinfile:
+        dest=/etc/udev/rules.d/99-freya-usb-devices.rules
+        create=yes
+        line='SUBSYSTEM=="tty", ACTION=="add", ATTRS{serial}=="A900DJRK", SYMLINK+="ngw-1"'
+    - name: Create device link for TackTick NMEA gateway
+      lineinfile:
+        dest=/etc/udev/rules.d/99-freya-usb-devices.rules
+        create=yes
+        line='SUBSYSTEM=="tty", ACTION=="add", ATTRS{serial}=="A900DPSJ", SYMLINK+="tacktick"'
+    - name: Mount first USB block device automatically to /mnt/usb (ignore Huawei)
+      lineinfile:
+        dest=/etc/udev/rules.d/99-freya-usb-devices.rules
+        create=yes
+        line="ACTION==\"add\", KERNEL==\"sd[a-h]1\", SUBSYSTEM==\"block\", ENV{ID_BUS}==\"usb\", ATTRS{idVendor}!=\"12d1\", RUN+=\"/bin/mkdir -p /mnt/usb\", RUN+=\"/bin/bash -c '/bin/mountpoint -q /mnt/usb || /bin/mount /dev/%k /mnt/usb'\""
