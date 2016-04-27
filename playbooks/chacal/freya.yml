@@ -63,3 +63,5 @@
         dest=/etc/udev/rules.d/99-freya-usb-devices.rules
         create=yes
         line="ACTION==\"add\", KERNEL==\"sd[a-h]1\", SUBSYSTEM==\"block\", ENV{ID_BUS}==\"usb\", ATTRS{idVendor}!=\"12d1\", RUN+=\"/bin/mkdir -p /mnt/usb\", RUN+=\"/bin/bash -c '/bin/mountpoint -q /mnt/usb || /bin/mount /dev/%k /mnt/usb'\""
+    - name: Periodically backup mounted USB stick to S3
+      cron: name="Backup to S3" minute="0" job="nice /usr/local/bin/aws s3 sync /mnt/usb s3://freyalogs >> /home/pi/aws.log 2>&1" user="pi"
