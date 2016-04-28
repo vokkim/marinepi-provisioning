@@ -8,10 +8,10 @@
 if [ $if_up -a $interface = {{ upnpc_interface }} -a $reason = BOUND ]; then
 {% if upnpc_port_forwards is defined %}
   logger -t dhcpcd "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
-  upnpc -r {{ upnpc_port_forwards }}
+  upnpc -p /dev/null -r {{ upnpc_port_forwards }} 2>&1 | logger -t upnpc
 {% endif %}
 {% for forward in upnpc_port_redirects %}
   logger -t dhcpcd "Adding UPnP port forwards: {{ forward }}"
-  upnpc -a {{ forward }}
+  upnpc -p /dev/null -a {{ forward }} 2>&1 | logger -t upnpc
 {% endfor %}
 fi
