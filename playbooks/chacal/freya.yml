@@ -45,6 +45,12 @@
       node_app_main: "freya-server.js /dev/ngw-1 /dev/tacktick /mnt/usb"
       node_app_user: "root"
       node_app_group: "root"
+    - role: node-app
+      node_app_name: "nrf-receiver"
+      node_app_git_repo: "https://github.com/chacal/nrf-sensor-receiver.git"
+      node_app_main: "server/index.js"
+      node_app_env:
+        - NRF24_RX_ADDRESS={{ chacal.nrf.address }}
     - root-ro
 
   tasks:
