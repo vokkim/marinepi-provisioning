@@ -9,3 +9,4 @@
 inadyn_ddns_check_period_s: 60                        # How often the check for changed IP is done
 inadyn_ddns_forced_update_period_s: 21600             # How often DDNS binding is refreshed even if the IP address has not (6 hours by default)
 inadyn_ddns_system: default@freedns.afraid.org        # See https://github.com/troglobit/inadyn for other supported providers
+inadyn_verbosity: 0                                   # Verbosity for log output, 0-5
