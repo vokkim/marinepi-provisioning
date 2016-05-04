@@ -76,5 +76,12 @@
   - "alias la='ls -la'"
   - "alias lt='ls -lat'"
 
+- name: Disable logging to /dev/xconsole   # By default nobody reads from /dev/xconsole and thus it overflows causing "action 'action 17' suspended" errors to syslog
+  replace:
+    dest=/etc/rsyslog.conf
+    regexp='^daemon.*mail(.|\n)*?/dev/xconsole'
+    replace='# Removed by Ansible'
+  notify: restart-rsyslog
+
 # Reboot due to possible changes now
 - meta: flush_handlers

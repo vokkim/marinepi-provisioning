@@ -4,6 +4,9 @@
 - name: restart-networking
   service: name=networking state=restarted
 
+- name: restart-rsyslog
+  service: name=rsyslog state=restarted
+
 - name: update_initramfs
   shell: if [ -f "/boot/initrd.img-$(uname -r)" ]; then update-initramfs -u -k $(uname -r); else update-initramfs -c -k $(uname -r); fi
   notify: reboot
