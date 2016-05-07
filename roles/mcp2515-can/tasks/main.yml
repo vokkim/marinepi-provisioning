@@ -1,8 +1,4 @@
 ---
-- name: Enable SPI
-  lineinfile: dest=/boot/config.txt regexp='^#(dtparam=spi=on)$' line='\1' backrefs=yes
-  notify: reboot
-
 - name: Enable SPI overlay
   lineinfile: dest=/boot/config.txt line='dtoverlay=spi-bcm2835-overlay'
   notify: reboot

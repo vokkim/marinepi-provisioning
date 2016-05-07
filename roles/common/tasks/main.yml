@@ -83,5 +83,9 @@
     replace='# Removed by Ansible'
   notify: restart-rsyslog
 
+- name: Enable SPI
+  lineinfile: dest=/boot/config.txt regexp='^#(dtparam=spi=on)$' line='\1' backrefs=yes
+  notify: reboot
+
 # Reboot due to possible changes now
 - meta: flush_handlers
