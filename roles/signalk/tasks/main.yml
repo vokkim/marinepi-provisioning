@@ -19,3 +19,12 @@
     command: "npm install mdns"
     args:
       chdir: /opt/signalk-server
+
+  - name: Copy SignalK server settings
+    copy: src={{ signalk_settings_file }} dest=/etc/signalk-settings.json mode=0644
+    when: signalk_settings_file is defined
+    register: signalk_settings
+
+  - name: Restart SignalK server
+    service: name=signalk-server state=restarted
+    when: signalk_settings.changed
