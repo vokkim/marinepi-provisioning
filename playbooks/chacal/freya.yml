@@ -40,6 +40,11 @@
       inadyn_ddns_username: "{{ chacal.inadyn_ddns_username }}"
       inadyn_ddns_password: "{{ chacal.inadyn_ddns_password }}"
       inadyn_ddns_hostname: "{{ chacal.inadyn_ddns_hostname.freya }}"
+    - role: signalk
+      signalk_settings_file: signalk-settings-freya.json
+      node_app_env:
+        - "NODE_ENV=production"
+        - "SIGNALK_NODE_SETTINGS=/etc/signalk-settings.json"
     - role: node-app
       node_app_name: "freya-server"
       node_app_git_repo: "https://github.com/chacal/freya-server.git"
