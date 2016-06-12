@@ -49,14 +49,12 @@
       inadyn_ddns_username: "{{ ddns_username }}"
       inadyn_ddns_password: "{{ ddns_password }}"
       inadyn_ddns_hostname: "{{ hostname }}"
-    - signalk
     - role: kplex
       kplex_serial_inputs:
         - "/dev/nexus"
         - "/dev/gps"
         - "/dev/ais"
       kplex_output_params:
-        - "device=wlan0"
         - "port=10110"
         - "mode=server"
 

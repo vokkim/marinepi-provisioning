@@ -7,6 +7,5 @@ kplex_serial_inputs: []
 kplex_output_transport: tcp
 
 kplex_output_params:
-  - "device=wlan0"
   - "port=10110"
   - "mode=server"
