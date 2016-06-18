@@ -59,6 +59,7 @@
     - dnsutils
     - wavemon
     - telnet
+    - speedtest-cli
   notify: reboot
 
 - name: Autoremove any unused packages
