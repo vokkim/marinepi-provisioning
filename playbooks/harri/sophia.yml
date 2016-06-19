@@ -48,7 +48,7 @@
     - role: inadyn_ddns
       inadyn_ddns_username: "{{ ddns_username }}"
       inadyn_ddns_password: "{{ ddns_password }}"
-      inadyn_ddns_hostname: "{{ hostname }}"
+      inadyn_ddns_hostname: "{{ ddns_hostname }}"
       inadyn_ddns_check_period_s: 595           # almost 10 mins
       inadyn_ddns_forced_update_period_s: 86395 # almost a day
     - role: kplex
