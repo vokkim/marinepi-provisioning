@@ -70,7 +70,8 @@
 
     # udev rules for serial-usb devices
     - lineinfile: dest=/etc/udev/rules.d/98-sophia-usb-devices.rules create=yes line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6001\", ATTRS{serial}==\"FTWR5XON\", SYMLINK+=\"nexus\""
-    - lineinfile: dest=/etc/udev/rules.d/98-sophia-usb-devices.rules line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6001\", ATTRS{serial}==\"FTWR5L6E\", SYMLINK+=\"gps\""
+    - lineinfile: dest=/etc/udev/rules.d/98-sophia-usb-devices.rules line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6001\", ATTRS{serial}==\"FTWR5L6E\", SYMLINK+=\"vhf-dsc\""
+    - lineinfile: dest=/etc/udev/rules.d/98-sophia-usb-devices.rules line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"01a7\", SYMLINK+=\"gps\""
     - lineinfile: dest=/etc/udev/rules.d/98-sophia-usb-devices.rules line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"16d0\", ATTRS{idProduct}==\"0b03\", SYMLINK+=\"ais\""
 
   handlers:
