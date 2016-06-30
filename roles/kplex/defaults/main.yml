@@ -1,11 +1,28 @@
 ---
+# INSTALLATION
 kplex_name: kplex_1.3.3-1_armhf
 kplex_url: http://www.stripydog.com/download/{{ kplex_name }}.deb
 
+# CONFIGURATION
+
+# Inputs
 kplex_serial_inputs: []
 
-kplex_output_transport: tcp
-
-kplex_output_params:
+# Server output
+kplex_server_transport: tcp
+kplex_server_params:
   - "port=10110"
   - "mode=server"
+
+# Marine Traffic forward
+kplex_marine_traffic_forwarding_enabled: false
+kplex_marine_traffic_address: ""
+kplex_marine_traffic_port: ""
+kplex_marine_traffic_transport: udp
+kplex_marine_traffic_coalesce: "yes"
+kplex_marine_traffic_ofilter: "+AIVDM:+AIVDO:-all"
+
+# Logging
+kplex_logging_enabled: false
+kplex_logging_file: "/home/pi/nmea.log"
+kplex_logging_timestamp: "s"

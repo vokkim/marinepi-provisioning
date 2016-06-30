@@ -56,10 +56,9 @@
         - "/dev/nexus"
         - "/dev/gps"
         - "/dev/ais"
-      kplex_output_params:
-        - "port=10110"
-        - "mode=server"
-
+      kplex_marine_traffic_forwarding_enabled: true
+      kplex_logging_enabled: true
+      
   tasks:
     - name: Enforce HTTPS for all the GIT traffic
       command: "{{item}}"

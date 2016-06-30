@@ -8,9 +8,35 @@ direction=in
 
 {% endfor %}
 
-# Output
-[{{ kplex_output_transport }}]
-{% for param in kplex_output_params %}
+# Server output
+name=Server
+[{{ kplex_server_transport }}]
+mode=server
+{% for param in kplex_server_params %}
 {{ param }}
 {% endfor %}
 direction=out
+
+{% if kplex_marine_traffic_forwarding_enabled %}
+# Marine traffic output
+name=MarineTraffic
+[{{ kplex_marine_traffic_transport }}]
+address={{ kplex_marine_traffic_address }}
+port={{ kplex_marine_traffic_port }}
+coalesce={{ kplex_marine_traffic_coalesce }}
+ofilter={{ kplex_marine_traffic_ofilter }}
+direction=out
+{%- endif %}
+
+{% if kplex_logging_enabled %}
+
+# Data logging to a file
+name=Logging
+[file]
+filename={{ kplex_logging_file }}
+timestamp={{ kplex_logging_timestamp }}
+direction=out
+append=yes
+owner=pi
+group=pi
+{%- endif %}
