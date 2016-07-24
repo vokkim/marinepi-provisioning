@@ -48,7 +48,7 @@
     - role: node-app
       node_app_name: "freya-server"
       node_app_git_repo: "https://github.com/chacal/freya-server.git"
-      node_app_main: "freya-server.js /dev/ngw-1 /dev/tacktick /mnt/usb"
+      node_app_main: "freya-server.js /dev/ngw-1 /dev/tacktick /opt/freya-nmealogs"
       node_app_user: "root"
       node_app_group: "root"
     - role: node-app
@@ -69,7 +69,6 @@
         - MARINETRAFFIC_IP={{chacal.marinetraffic.ip}}
         - MARINETRAFFIC_PORT={{chacal.marinetraffic.port}}
         - SIGNALK_API_URL=http://10.90.100.1:8080/signalk/v1/api
-    - root-ro
 
   tasks:
     - name: Create device link for NGW-1 serial port
@@ -87,5 +86,5 @@
         dest=/etc/udev/rules.d/99-freya-usb-devices.rules
         create=yes
         line="ACTION==\"add\", KERNEL==\"sd[a-h]1\", SUBSYSTEM==\"block\", ENV{ID_BUS}==\"usb\", ATTRS{idVendor}!=\"12d1\", RUN+=\"/bin/mkdir -p /mnt/usb\", RUN+=\"/bin/bash -c '/bin/mountpoint -q /mnt/usb || /bin/mount /dev/%k /mnt/usb'\""
-    - name: Periodically backup mounted USB stick to S3
-      cron: name="Backup to S3" minute="0" hour="*/6" job="(echo Start `date` && nice /usr/local/bin/aws s3 sync /mnt/usb s3://freyalogs; echo Done `date`) >> /home/pi/aws.log 2>&1" user="pi"
+    - name: Periodically backup NMEA logs to S3
+      cron: name="Backup to S3" minute="0" hour="*/6" job="(echo Start `date` && nice /usr/local/bin/aws s3 sync /opt/freya-nmealogs s3://freyalogs; echo Done `date`) >> /home/pi/aws.log 2>&1" user="pi"
