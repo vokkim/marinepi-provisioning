@@ -16,6 +16,9 @@ Usage
 1. [Install Ansible](http://docs.ansible.com/ansible/intro_installation.html) on your local computer
    - NOTE: use Ansible 1.9 as version 2.X has [an issue with reboots](https://github.com/tkurki/marinepi-provisioning/issues/16)
 1. [Initialize a memory card](https://www.raspberrypi.org/documentation/installation/installing-images/) with the latest [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/)
+  - `diskutil list`
+  - `diskutil unmountDisk /dev/<disk#>`
+  - `sudo dd bs=1m if=<your image file>.img of=/dev/<disk#>`
 1. Connect the to-be-provisioned Raspberry Pi to the local network and [find out it's IP address](https://www.raspberrypi.org/documentation/remote-access/ip-address.md)
 1. Run `./firstrun.sh <ip-of-your-raspi>` to copy over your [ssh key](https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md) & do the initial setup (change password for user `pi`, copy the ssh key, expand the filesystem)
 1. Edit configuration in `example-boat.yml` to match your environment and fill in your hotspot details
