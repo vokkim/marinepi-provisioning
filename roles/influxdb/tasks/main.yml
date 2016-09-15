@@ -1,0 +1,41 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+- name: Download InfluxDb binary distribution
+  get_url: url=https://dl.influxdata.com/influxdb/releases/influxdb-1.0.0_linux_armhf.tar.gz dest=/tmp/influxdb.tar.gz mode=0440
+  register: influxdb_package
+
+- name: Extract distribution package to /usr/local
+  shell: tar xf /tmp/influxdb.tar.gz -C / --strip-components=2 --no-same-owner
+  when: influxdb_package.changed
+  register: influxdb
+
+- name: Link unit file
+  file: src=/usr/lib/influxdb/scripts/influxdb.service dest=/etc/systemd/system/influxdb.service owner=root group=root state=link force=yes
+  when: influxdb.changed
+  register: unit_file
+
+- name: Clear temporary files
+  file: path=/tmp/influxdb.tar.gz state=absent
+  when: influxdb.changed
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  when: unit_file.changed
+
+- name: Restart & enable socket
+  command: systemctl enable infludb.service
+  command: systemctl start infludb.service
+  when: unit_file.changed
