@@ -13,8 +13,9 @@
 # limitations under the License.
 
 ---
-# Run setup first, then this:
-# ansible-playbook -i hosts site.yml
+# Run setup first, then
+# export ANSIBLE_VAULT_PASSWORD_FILE=<file>
+# ./provision.sh 192.168.1.100 playbooks/tkurki/cassiopeia.yml
 
 - hosts: all
   remote_user: pi
@@ -23,6 +24,9 @@
 
   vars:
     - hostname: cassiopeia
+
+  vars_files:
+    - secrets.yml
 
   roles:
     - common
