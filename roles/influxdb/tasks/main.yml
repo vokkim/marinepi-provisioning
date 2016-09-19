@@ -20,22 +20,39 @@
 - name: Extract distribution package to /usr/local
   shell: tar xf /tmp/influxdb.tar.gz -C / --strip-components=2 --no-same-owner
   when: influxdb_package.changed
+  become: true
   register: influxdb
 
-- name: Link unit file
-  file: src=/usr/lib/influxdb/scripts/influxdb.service dest=/etc/systemd/system/influxdb.service owner=root group=root state=link force=yes
-  when: influxdb.changed
-  register: unit_file
+- name: Create Group
+  group: name=influxdb state=present
+
+- name: Create User infludb
+  user: name=influxdb group=influxdb
+
+- name: Create directories
+  file: path={{ item }} state=directory owner=influxdb group=influxdb mode=0775
+  with_items:
+     - /var/lib/influxdb
+     - /etc/influxdb
+  become: true
 
 - name: Clear temporary files
   file: path=/tmp/influxdb.tar.gz state=absent
   when: influxdb.changed
 
+- name: Link unit file
+  file: src=/usr/lib/influxdb/scripts/influxdb.service dest=/etc/systemd/system/influxdb.service owner=root group=root state=link force=yes
+  when: influxdb.changed
+  register: unit_file
+  become: true
+
 - name: Reload systemd
   command: systemctl daemon-reload
   when: unit_file.changed
+  become: true
 
-- name: Restart & enable socket
-  command: systemctl enable infludb.service
-  command: systemctl start infludb.service
+- name: Enable service and start it
+  command: systemctl enable influxdb.service
+  command: systemctl start influxdb.service
   when: unit_file.changed
+  become: true
