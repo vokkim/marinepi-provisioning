@@ -23,6 +23,11 @@
   become: true
   register: influxdb
 
+#1/10th or normal cache snaphot memory to ward off kernel killing influxdb
+- name: Custom configuration for RPi
+  lineinfile: dest=/etc/influxdb/influxdb.conf line="  cache-snapshot-memory-size = 2621440" insertafter="  \# cache-snapshot-memory-size.*"
+  become: true
+
 - name: Create Group
   group: name=influxdb state=present
 
