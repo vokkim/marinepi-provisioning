@@ -6,3 +6,5 @@ wificlient_networks:
     psk: defaultpassphrase
     priority: 1
     scan_ssid: 0
+
+wificlient_power_management: "on"
