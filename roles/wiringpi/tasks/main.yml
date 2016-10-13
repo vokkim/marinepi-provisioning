@@ -1,0 +1,12 @@
+---
+- name: Clone wiring pi
+  sudo: true
+  git: repo=git://git.drogon.net/wiringPi dest=/opt/wiringPi accept_hostkey=yes force=yes version=master
+  register: wiringpi_git_pull
+
+- name: Build the wiring pi project
+  sudo: true
+  shell: ./build
+  args:
+    chdir: /opt/wiringPi
+  when: wiringpi_git_pull.changed
