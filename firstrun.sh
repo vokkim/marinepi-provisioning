@@ -1,13 +1,17 @@
 #!/bin/bash
 PUBLIC_KEY=~/.ssh/id_rsa.pub
 
-if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
-  echo -e "\nCopies SSH public key to the given Raspberry Pi host. Uses ~/.ssh/id_rsa.pub by default.\n"
-  echo -e "Usage: $0 <host> [ssh-public-key-file]\n"
+if [[ "$1" =~ ^(-h|-\?|--help)$ ]] ; then
+  echo -e "\nCopies SSH public key to the given Raspberry Pi host. \n"
+  echo -e "Uses raspberrypi.local as host and the key in ~/.ssh/id_rsa.pub as default.\n"
+  echo -e "Usage: $0 [<host> ssh-public-key-file]\n"
   exit 1
 fi
 
-HOST=$1
+HOST=raspberrypi.local
+if [ "$1" != "" ]; then
+  HOST=$1
+fi
 
 if [ "$2" != "" ]; then
   if [ ! -f "$2" ]; then
