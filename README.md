@@ -21,8 +21,8 @@ Usage
   - `sudo dd bs=1m if=<your image file>.img of=/dev/<disk#>`
 1. [Enable ssh](https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/) for Raspbian headless operation
   - `touch /Volumes/boot/ssh`
-1. Connect the to-be-provisioned Raspberry Pi to the local network and [find out it's IP address](https://www.raspberrypi.org/documentation/remote-access/ip-address.md)
-1. Run `./firstrun.sh <ip-of-your-raspi>` to copy over your [ssh key](https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md) & do the initial setup (change password for user `pi`, copy the ssh key, expand the filesystem)
+1. Connect the to-be-provisioned Raspberry Pi to the local network.
+1. Run either `./firstrun.sh` (uses hostname `raspberrypi.local`) or `./firstrun.sh <ip-of-your-raspi>` ([find out the IP address](https://www.raspberrypi.org/documentation/remote-access/ip-address.md)) to copy over your [ssh key](https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md) & do the initial setup (change password for user `pi`, copy the ssh key, expand the filesystem)
 1. Edit configuration in `example-boat.yml` to match your environment and fill in your hotspot details
 1. Run `./provision.sh <ip-of-your-raspi> example-boat.yml` to provision the software & configurations for the roles in example-boat.yml.
 
