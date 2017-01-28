@@ -41,7 +41,7 @@
     - role: nat_router
       nat_router_local_interface: wlan0
       nat_router_inet_interface: wlan1
- 
+
     - canboat
     - signalk
 
