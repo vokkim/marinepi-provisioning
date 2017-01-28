@@ -16,7 +16,7 @@
 - hosts: all
   remote_user: pi
   gather_facts: yes
-  sudo: yes
+  become: yes
 
 # Configure vars and roles below to match your setup and environment
 # You can define 1...n wificlients by adding/removing lines

@@ -15,7 +15,7 @@
 ---
 - name: Download canboat
   git: repo=https://github.com/canboat/canboat.git dest={{ canboat_path }} clone=yes
-  sudo: no
+  become: no
   register: canboat_sources
 
 - name: Install xsltproc needed for canboat compiling
@@ -24,7 +24,7 @@
 - command: make
   args:
     chdir: "{{ canboat_path }}"
-  sudo: no
+  become: no
   when: canboat_sources.changed
 
 - command: make install
