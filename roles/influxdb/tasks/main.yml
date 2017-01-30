@@ -30,9 +30,11 @@
 
 - name: Create Group
   group: name=influxdb state=present
+  become: true
 
 - name: Create User infludb
   user: name=influxdb group=influxdb state=present
+  become: true
 
 - name: Ensure directories with correct ownership
   file: path={{ item }} state=directory owner=influxdb group=influxdb mode=0775
