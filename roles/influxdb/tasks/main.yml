@@ -14,7 +14,7 @@
 
 ---
 - name: Download InfluxDb binary distribution
-  get_url: url=https://dl.influxdata.com/influxdb/releases/influxdb-1.0.0_linux_armhf.tar.gz dest=/tmp/influxdb.tar.gz mode=0440
+  get_url: url=https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_armhf.tar.gz dest=/tmp/influxdb.tar.gz mode=0440
   register: influxdb_package
 
 - name: Extract distribution package to /usr/local
