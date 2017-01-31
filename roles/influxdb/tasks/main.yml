@@ -28,6 +28,13 @@
   lineinfile: dest=/etc/influxdb/influxdb.conf line="  cache-snapshot-memory-size = 2621440" insertafter="  \# cache-snapshot-memory-size.*"
   become: true
 
+- name: HTTP API listen only on localhost
+  lineinfile:
+    dest: '/etc/influxdb/influxdb.conf'
+    line: '  bind-address = "localhost:8086"'
+    regexp: '  # bind-address = ":8086"'
+  become: true
+
 - name: Create Group
   group: name=influxdb state=present
   become: true
