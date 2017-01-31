@@ -28,12 +28,12 @@
 
 - name: "{{ node_app_name }} | Pull sources from the repository"
   git: repo={{ node_app_git_repo }} dest={{ node_app_path }} force=yes version=master
-  sudo_user: "{{ node_app_user }}"
+  become_user: "{{ node_app_user }}"
   register: git_pull
 
 - name: "{{ node_app_name }} | Install npm packages"
   shell: chdir={{ node_app_path }} npm install
-  sudo_user: "{{ node_app_user }}"
+  become_user: "{{ node_app_user }}"
   when: git_pull.changed
 
 - name: "{{ node_app_name }} | Install systemd unit file"
