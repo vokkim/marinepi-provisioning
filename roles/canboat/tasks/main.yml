@@ -14,7 +14,7 @@
 
 ---
 - name: Download canboat
-  git: repo=https://github.com/canboat/canboat.git dest={{ canboat_path }} clone=yes
+  git: repo=https://github.com/canboat/canboat.git dest={{ canboat_path }} clone=yes force=yes
   become: no
   register: canboat_sources
 
