@@ -68,7 +68,7 @@
 - name: Enable service and start it
   command: "{{item}}"
   with_items:
-  - systemctl enable influxdb.service
-  - systemctl start influxdb.service
+  - systemctl enable influxdb
+  - systemctl start influxdb
   when: unit_file.changed
   become: true
