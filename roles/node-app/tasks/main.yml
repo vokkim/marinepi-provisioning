@@ -51,8 +51,8 @@
 - name: "{{ node_app_name }} | Restart & enable socket"
   command: "{{ item }}"
   with_items:
-    systemctl enable {{ node_app_name }}.socket
-    systemctl start {{ node_app_name }}.socket
+    - systemctl enable {{ node_app_name }}.socket
+    - systemctl start {{ node_app_name }}.socket
   when: socket_file.changed
 
 - name: "{{ node_app_name }} | Restart application"
