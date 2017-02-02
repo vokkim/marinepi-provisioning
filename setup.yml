@@ -14,7 +14,7 @@
 
 ---
 - hosts: all
-  sudo: yes
+  become: yes
   user: "{{ ansible_ssh_user }}"
 
   handlers:
@@ -41,5 +41,8 @@
 
     - name: Expand filesystem
       shell: "raspi-config --expand-rootfs"
-      sudo: yes
+      become: yes
       notify: reboot
+
+    - name: Show IP Address
+      debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
