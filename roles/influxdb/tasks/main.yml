@@ -1,0 +1,74 @@
+# Copyright 2016 Teppo Kurki <teppo.kurki@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+- name: Download InfluxDb binary distribution
+  get_url: url=https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_armhf.tar.gz dest=/tmp/influxdb.tar.gz mode=0440
+  register: influxdb_package
+
+- name: Extract distribution package to /usr/local
+  shell: tar xf /tmp/influxdb.tar.gz -C / --strip-components=2 --no-same-owner
+  when: influxdb_package.changed
+  become: true
+  register: influxdb
+
+#1/10th or normal cache snaphot memory to ward off kernel killing influxdb
+- name: Custom configuration for RPi
+  lineinfile: dest=/etc/influxdb/influxdb.conf line="  cache-snapshot-memory-size = 2621440" insertafter="  \# cache-snapshot-memory-size.*"
+  become: true
+
+- name: HTTP API listen only on localhost
+  lineinfile:
+    dest: '/etc/influxdb/influxdb.conf'
+    line: '  bind-address = "localhost:8086"'
+    regexp: '  # bind-address = ":8086"'
+  become: true
+
+- name: Create Group
+  group: name=influxdb state=present
+  become: true
+
+- name: Create User infludb
+  user: name=influxdb group=influxdb state=present
+  become: true
+
+- name: Ensure directories with correct ownership
+  file: path={{ item }} state=directory owner=influxdb group=influxdb mode=0775
+  with_items:
+     - /var/lib/influxdb
+     - /etc/influxdb
+  become: true
+
+- name: Clear temporary files
+  file: path=/tmp/influxdb.tar.gz state=absent
+  when: influxdb.changed
+
+- name: Link unit file
+  file: src=/usr/lib/influxdb/scripts/influxdb.service dest=/lib/systemd/system/influxdb.service owner=root group=root state=link force=yes
+  when: influxdb.changed
+  register: unit_file
+  become: true
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  when: unit_file.changed
+  become: true
+
+- name: Enable service and start it
+  command: "{{item}}"
+  with_items:
+  - systemctl enable influxdb
+  - systemctl start influxdb
+  when: unit_file.changed
+  become: true
