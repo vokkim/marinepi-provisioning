@@ -2,7 +2,7 @@
 - hosts: all
   remote_user: pi
   gather_facts: yes
-  sudo: yes
+  become: yes
 
   handlers:
     - include: ../../handlers/handlers.yml
