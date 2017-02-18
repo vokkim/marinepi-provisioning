@@ -18,6 +18,9 @@
 #      server.listen(8080);
 #  }
 #
+#  If your application doesn't need a systemd socket, set "node_app_use_socket: false"
+#  to skip socket creation.
+#
 # Multiple applications can be installed by including the role many times
 # using different parameters.
 #
@@ -43,6 +46,7 @@
 - name: "{{ node_app_name }} | Install systemd socket file"
   template: src=node_app_systemd_socket.j2 dest=/lib/systemd/system/{{ node_app_name }}.socket owner=root group=root mode=0644
   register: socket_file
+  when: node_app_use_socket
 
 - name: "{{ node_app_name }} | Reload systemd"
   command: systemctl daemon-reload
@@ -53,7 +57,7 @@
   with_items:
     - systemctl enable {{ node_app_name }}.socket
     - systemctl start {{ node_app_name }}.socket
-  when: socket_file.changed
+  when: socket_file.changed and node_app_use_socket
 
 - name: "{{ node_app_name }} | Restart application"
   service: name={{ node_app_name }} state=restarted enabled=yes
