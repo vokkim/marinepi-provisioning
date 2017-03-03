@@ -19,7 +19,7 @@ TYPE="A"
 # Get the external IP address from OpenDNS (more reliable than other providers)
 IP=`dig +short myip.opendns.com @resolver1.opendns.com`
 
-ROUTE53IP=`/usr/local/bin/aws route53 list-resource-record-sets  --hosted-zone-id  $ZONEID --output text | grep -A1 $RECORDSET | tail -1 | cut  -f 2`
+ROUTE53IP=`/usr/local/bin/aws route53 list-resource-record-sets --hosted-zone-id $ZONEID --output text | grep -A1 "[[:space:]]$RECORDSET\.[[:space:]]" | tail -1 | cut -f 2`
 
 function valid_ip()
 {
