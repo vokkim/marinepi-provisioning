@@ -24,6 +24,7 @@
 
   vars:
     - hostname: cassiopeia
+    - timezone: Europe/Helsinki
 
   vars_files:
     - secrets.yml
