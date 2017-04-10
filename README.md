@@ -14,7 +14,6 @@ Usage
 =====
 
 1. [Install Ansible](http://docs.ansible.com/ansible/intro_installation.html) on your local computer
-   - NOTE: use Ansible 1.9 as version 2.X has [an issue with reboots](https://github.com/tkurki/marinepi-provisioning/issues/16)
 1. [Initialize a memory card](https://www.raspberrypi.org/documentation/installation/installing-images/) with the latest [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/)
   - `diskutil list`
   - `diskutil unmountDisk /dev/<disk#>`
