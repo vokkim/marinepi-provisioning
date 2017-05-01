@@ -4,8 +4,7 @@
 # upnpc is used to set up port forwardings and/or redirects for the given ports 
 # when the specified network interface with a dhcpcd address comes up.
 #
-
-if [ "${if_up}" = "true" ] && [ "${interface}" = "{{ upnpc_interface }}" ] && [ "${new_ip_address}" != "${old_ip_address}" ] && [ "${reason}" = "BOUND" ]; then
+if [ "${if_up}" = "true" ] && [ "${interface}" = "{{ upnpc_interface }}" ] && [ "${new_ip_address}" != "${old_ip_address}" ] && ([ "${reason}" = "BOUND" ] || [ "${reason}" = "REBIND" ] || [ "${reason}" = "REBOOT" ]); then
 {% if upnpc_port_forwards is defined %}
   logger -t dhcpcd "Setting up UPnP port forwards: {{ upnpc_port_forwards }}"
   upnpc -p /dev/null -r {{ upnpc_port_forwards }} 2>&1 | logger -t upnpc
