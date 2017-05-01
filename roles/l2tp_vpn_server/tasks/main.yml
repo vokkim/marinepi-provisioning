@@ -64,3 +64,9 @@
     - { key: 'net.ipv4.conf.default.send_redirects', value: 0 }
     - { key: 'net.ipv4.icmp_ignore_bogus_error_responses', value: 1 }
   notify: reload_sysctl
+
+- name: Enable IPSec service
+  service: name=ipsec state=started enabled=yes
+
+- name: Enable xl2tpd service
+  service: name=xl2tpd state=started enabled=yes
