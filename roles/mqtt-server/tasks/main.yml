@@ -49,6 +49,9 @@
       WantedBy=multi-user.target
   register: mosquitto_unit_file
 
+- name: Remove mosquitto password file
+  file: path={{ mqtt_server_password_file }} state=absent
+
 - name: Create mosquitto password file
   file: path={{ mqtt_server_password_file }} state=touch mode=0600
   when: mqtt_server_users|length > 0
@@ -58,10 +61,6 @@
   no_log: true
   with_items: "{{ mqtt_server_users }}"
   when: mqtt_server_users|length > 0
-
-- name: Remove mosquitto password file if no users given
-  file: path={{ mqtt_server_password_file }} state=absent
-  when: mqtt_server_users|length == 0
 
 - name: Enable mosquitto and start it
   systemd: name=mosquitto daemon_reload=yes state=restarted enabled=yes
