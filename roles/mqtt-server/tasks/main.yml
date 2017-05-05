@@ -1,0 +1,68 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+- name: Install PGP key for Mosquitto repository
+  apt_key: url=https://ftp-master.debian.org/keys/archive-key-6.0.asc state=present
+
+- name: Add Mosquitto repository
+  apt_repository:
+    repo: deb http://repo.mosquitto.org/debian jessie main
+    state: present
+
+- name: Install Mosquitto
+  apt: pkg=mosquitto state=latest allow_unauthenticated=true
+
+- name: Mosquitto config file
+  copy:
+    dest: /etc/mosquitto/conf.d/custom.conf
+    content: "{{ mqtt_server_config }}"
+  register: mosquitto_conf_file
+
+- name: Create Mosquitto unit file
+  copy:
+    dest: /etc/systemd/system/mosquitto.service
+    content: |
+      [Unit]
+      Description=Mosquitto MQTT broker
+
+      [Service]
+      User=root
+      Group=root
+      Type=simple
+      ExecStart=/usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+      Restart=always
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+  register: mosquitto_unit_file
+
+- name: Create mosquitto password file
+  file: path={{ mqtt_server_password_file }} state=touch mode=0600
+  when: mqtt_server_users|length > 0
+
+- name: Setup mosquitto users
+  command: "mosquitto_passwd -b {{ mqtt_server_password_file }} {{ item.username }} {{ item.password }}"
+  no_log: true
+  with_items: "{{ mqtt_server_users }}"
+  when: mqtt_server_users|length > 0
+
+- name: Remove mosquitto password file if no users given
+  file: path={{ mqtt_server_password_file }} state=absent
+  when: mqtt_server_users|length == 0
+
+- name: Enable mosquitto and start it
+  systemd: name=mosquitto daemon_reload=yes state=restarted enabled=yes
+  when: (mosquitto_unit_file is defined and mosquitto_unit_file.changed) or (mosquitto_conf_file is defined and mosquitto_conf_file.changed)
