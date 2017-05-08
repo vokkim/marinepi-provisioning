@@ -24,6 +24,9 @@
 - name: Install Mosquitto
   apt: pkg=mosquitto state=latest allow_unauthenticated=true
 
+- name: Install Mosquitto clients
+  apt: pkg=mosquitto-clients state=latest allow_unauthenticated=true
+
 - name: Mosquitto config file
   copy:
     dest: /etc/mosquitto/conf.d/custom.conf
