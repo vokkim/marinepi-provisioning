@@ -38,6 +38,10 @@
 ##############################################################################
 # Interfaces
 
+- name: Install/update bridge-utils if needed
+  apt: pkg=bridge-utils state=latest
+  when: nat_router_bridge_interfaces is defined
+
 - name: Ensure interface.d source-dir reference
   lineinfile: 
     dest=/etc/network/interfaces 
