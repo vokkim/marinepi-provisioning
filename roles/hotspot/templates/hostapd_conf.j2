@@ -22,6 +22,10 @@ hw_mode=g
 ieee80211n=1
 wmm_enabled=1
 
+{% if hotspot_bridge_interface is defined %}
+bridge={{ hotspot_bridge_interface }}
+{% endif %}
+
 # Logging
 
 logger_syslog=-1
