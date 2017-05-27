@@ -1,0 +1,81 @@
+{
+  "vessel": {
+    "name": "Tuk tuk",
+    "mmsi": "230071440",
+    "brand": "Bavaria",
+    "type": "36",
+
+    "design": {
+      "length": 10.96,
+      "beam": 3.60,
+      "airHeight": 15.16,
+      "draft": 1.60
+    },
+
+    "communication": {
+      "callsignVhf": "OH4522"
+    }
+  },
+
+  "pipedProviders": [{
+    "id": "gps",
+    "pipeElements": [{
+      "type": "providers/serialport",
+      "options": {
+        "device": "/dev/gps",
+        "baudrate": 4800
+      }
+    }, {
+      "type": "providers/nmea0183-signalk",
+      "optionMappings": [{
+        "fromAppProperty": "selfId",
+        "toOption": "selfId"
+      }, {
+        "fromAppProperty": "selfType",
+        "toOption": "selfType"
+      }]
+    }]
+  },{
+    "id": "raymarine",
+    "pipeElements": [{
+      "type": "providers/serialport",
+      "options": {
+        "device": "/dev/raymarine",
+        "baudrate": 4800
+      }
+    }, {
+      "type": "providers/nmea0183-signalk",
+      "optionMappings": [{
+        "fromAppProperty": "selfId",
+        "toOption": "selfId"
+      }, {
+        "fromAppProperty": "selfType",
+        "toOption": "selfType"
+      }]
+    }]
+  }, {
+    "id": "ais",
+    "pipeElements": [{
+      "type": "providers/serialport",
+      "options": {
+        "device": "/dev/ais",
+        "baudrate": 38400
+      }
+    }, {
+      "type": "providers/nmea0183-signalk",
+      "optionMappings": [{
+        "fromAppProperty": "selfId",
+        "toOption": "selfId"
+      }, {
+        "fromAppProperty": "selfType",
+        "toOption": "selfType"
+      }]
+    }]
+  }],
+  "interfaces": {
+    "bower": true,
+    "rest": true,
+    "ws": true,
+    "nmea-tcp": true
+  }
+}

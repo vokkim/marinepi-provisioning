@@ -1,0 +1,83 @@
+# Copyright 2015-2016 Harri Kapanen <harri.kapanen@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ANSIBLE_ROLES_PATH=roles/ ansible-playbook -i 192.168.74.1, playbooks/tuktuk/tuktuk.yml --ask-vault-pass
+---
+- hosts: all
+  remote_user: pi
+  gather_facts: yes
+  sudo: yes
+
+# Public variables
+  vars:
+    - hostname: tuktuk
+    - timezone: Europe/Helsinki
+    - signalk_setings_file: ./signalk-settings-tuktuk.json
+    - root_ro_enabled: false
+
+  vars_files:
+    - secrets.yml
+
+  roles:
+    - common
+    - ups
+    - wificlient
+    - opencpn
+    - hotspot
+    - role: nat_router
+      nat_router_local_interface: wlan0
+      nat_router_inet_interface: eth0 #wlan1 (default), eth0 (Ethernet), eth1 (LTE-dongle)
+
+    #- role: upnpc
+    #  upnpc_interface: wlan1
+    #  upnpc_port_forwards: "500 UDP 4500 UDP 1701 UDP"
+    #- role: l2tp_vpn_server
+    #  l2tp_vpn_psk: "{{ l2tp_vpn_passphrase }}"
+    #- role: inadyn_ddns
+    #  inadyn_ddns_username: "{{ ddns_username }}"
+    #  inadyn_ddns_password: "{{ ddns_password }}"
+    #  inadyn_ddns_hostname: "{{ ddns_hostname }}"
+    #  inadyn_ddns_check_period_s: 595           # almost 10 mins
+    #  inadyn_ddns_forced_update_period_s: 86395 # almost a day
+
+    - role: kplex
+      kplex_serial_inputs:
+        - file: "/dev/ais"
+          baud: "38400"
+        - file: "/dev/raymarine"
+          baud: "4800"
+      kplex_server_transport: serial
+      kplex_server_params:
+        - "filename=/dev/plotter"
+        - "baud=38400"
+      kplex_marine_traffic_forwarding_enabled: false
+      kplex_logging_enabled: false
+
+  tasks:
+    - name: Enforce HTTPS for all the GIT traffic
+      command: "{{item}}"
+      with_items:
+       - 'git config --global url."https://github.com/".insteadOf git@github.com:'
+       - 'git config --global url."https://".insteadOf git://'
+      sudo: no
+
+    # udev rules for serial-usb devices
+    - lineinfile: dest=/etc/udev/rules.d/98-tuktuk-usb-devices.rules create=yes line="SUBSYSTEM==\"tty\", SUBSYSTEMS==\"usb-serial\", DRIVERS==\"mos7840\", ATTRS{port_number}==\"1\", SYMLINK+=\"raymarine\""
+    - lineinfile: dest=/etc/udev/rules.d/98-tuktuk-usb-devices.rules line="SUBSYSTEM==\"tty\", SUBSYSTEMS==\"usb-serial\", DRIVERS==\"mos7840\", ATTRS{port_number}==\"2\", SYMLINK+=\"ais\""
+    - lineinfile: dest=/etc/udev/rules.d/98-tuktuk-usb-devices.rules line="SUBSYSTEM==\"tty\", SUBSYSTEMS==\"usb-serial\", DRIVERS==\"mos7840\", ATTRS{port_number}==\"3\", SYMLINK+=\"plotter\""
+    - lineinfile: dest=/etc/udev/rules.d/98-tuktuk-usb-devices.rules line="SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"067b\", ATTRS{idProduct}==\"2303\", SYMLINK+=\"gps\""
+
+
+  handlers:
+    - include: ../../handlers/handlers.yml
