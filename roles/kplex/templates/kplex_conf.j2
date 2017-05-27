@@ -3,7 +3,8 @@
 # Serial inputs
 {% for device in kplex_serial_inputs %}
 [serial]
-filename={{ device }}
+filename={{ device.file }}
+baud={{ device.baud }}
 direction=in
 
 {% endfor %}
