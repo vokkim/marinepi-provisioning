@@ -1,0 +1,62 @@
+# Copyright 2017 Mikko Vesikkala <mikko.vesikkala@iki.fi>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+- apt_repository:
+    repo: 'ppa:opencpn/opencpn'
+    codename: 'trusty'
+
+- name: Install OpenCPN
+  apt: pkg=opencpn state=latest
+  become: true
+
+- name: Ensure config directory exists
+  file:
+    path: /home/pi/.config
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0700
+
+- name: Ensure config directory exists
+  file:
+    path: /home/pi/.config/
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0700
+
+- name: Ensure autostart directory exists
+  file:
+    path: /home/pi/.config/autostart/
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0700
+
+- name: Copy autostart script
+  copy:
+    src: autostart.cfg
+    dest: /home/pi/.config/autostart/opencpn.desktop
+    owner: pi
+    group: pi
+    mode: 0700
+
+- name: Create charts directory
+  file:
+    path: /home/pi/opencpn-charts/
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0700
